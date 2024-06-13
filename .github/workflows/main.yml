@@ -8,4 +8,4 @@ jobs:
     steps:
       - uses: docker://pandoc/core:2.9
         with:
-          args: "index.md > index.html" # gets appended to pandoc command
+          args: "--output index.html --standalone index.md" # gets appended to pandoc command
