@@ -12,9 +12,9 @@ Im [**Café Flora**](https://maps.app.goo.gl/RK9n2KSjUxHUXJc8A) - auf dem Campus
 ## [Anmeldung](https://docs.google.com/forms/d/e/1FAIpQLSf0n3TjrE4Mc82CssqC_WUogs4b7_VOk0le7ub_lhWUIrBhrw/viewform?usp=sf_link)
 
 **Details:** \
-Erwartetete Spielzeit: 18:00 - 22:00 Uhr \
+Erwartete Spielzeit: 18:00 - 22:00 Uhr \
 Geplante Runden: 3 Listen á 18 Spiele \
-Gespielt wird nach der Internationalen Skatordnung (Turnierkskat)
+Gespielt wird nach der Internationalen Skatordnung (Turnierskat)
 
 **Kontakt:** \
 [reizenderunde@gmail.com](mailto:reizenderunde@gmail.com)
