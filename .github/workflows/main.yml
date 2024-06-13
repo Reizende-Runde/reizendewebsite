@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: docker://pandoc/core:latest
+        with:
+          args: pandoc -s -o index.html --metadata title="Skattunier" index.md
+    
       - uses: actions/checkout@v4
       - run: |
-          pandoc -s -o index.html --metadata title="Skattunier" index.md
           git config --global user.name github-actions
           git config user.email github-actions@github.com
           git add .
