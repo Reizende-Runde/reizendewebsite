@@ -8,12 +8,15 @@ jobs:
   convert_via_pandoc:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repo
       - uses: actions/checkout@v4
 
+      - name: Compile page
       - uses: docker://pandoc/core:latest
         with:
           args: pandoc -s -o index.html --metadata title="Skattunier" index.md
 
+      - name: Commit chagnes
       - uses: EndBug/add-and-commit@v9
         with: 
           default_author: github_actions
