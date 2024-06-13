@@ -7,10 +7,9 @@ permissions:
 jobs:
   convert_via_pandoc:
     runs-on: ubuntu-latest
-    container:
-      image: pandoc/core:latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: docker://pandoc/core:latest
+      - uses: actions/checkout@v4
       - run: |
           pandoc -s -o index.html --metadata title="Skattunier" index.md
           git config --global user.name github-actions
