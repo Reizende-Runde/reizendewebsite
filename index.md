@@ -1,0 +1,20 @@
+<!-- gerne zentriert statt linksbündig alles, und if possible statt der Header einfach groß und fett? Damit diese  -->
+<!-- striche und abstände weggehen -->
+
+_Reizende Runde_ veranstaltet
+
+## 🂡 ♧ Skat-Turnier an der HU Berlin ♢ 🂺  
+
+Am **09.07.2024**, 17:45 Uhr  
+Im [**Café Flora**](https://maps.app.goo.gl/RK9n2KSjUxHUXJc8A) - auf dem Campus Nord der HU Berlin  
+**Offen** und kostenfrei für Alle  
+  
+## [Anmeldung](https://docs.google.com/forms/d/e/1FAIpQLSf0n3TjrE4Mc82CssqC_WUogs4b7_VOk0le7ub_lhWUIrBhrw/viewform?usp=sf_link)
+
+**Details:** \
+Erwartetet Spielzeit: 18:00 - 22:00 Uhr \
+Geplante Runden: 3 Listen á 18 Spiele \
+Gespielt wird nach der Internationalen Skatordnung (Turnierkskat)
+
+**Kontakt:** \
+reizenderunde@gmail.com
