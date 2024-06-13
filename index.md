@@ -17,4 +17,4 @@ Geplante Runden: 3 Listen á 18 Spiele \
 Gespielt wird nach der Internationalen Skatordnung (Turnierkskat)
 
 **Kontakt:** \
-reizenderunde@gmail.com
+![reizenderunde@gmail.com](mailto:reizenderunde@gmail.com)
