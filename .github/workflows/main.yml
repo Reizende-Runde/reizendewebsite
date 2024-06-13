@@ -8,11 +8,15 @@ jobs:
   convert_via_pandoc:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: compile
       - uses: docker://pandoc/core:latest
         with:
           args: pandoc -s -o index.html --metadata title="Skattunier" index.md
-    
+
+      - name: push
       - uses: actions/checkout@v4
       - run: |
           git config --global user.name github-actions
