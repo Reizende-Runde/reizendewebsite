@@ -7,7 +7,8 @@
  \
  \
  \
- \  
+ \
+  
 _Reizende Runde_ veranstaltet
 ## 🂡 ♧ Skat-Turnier an der HU Berlin ♢ 🂺  
 
