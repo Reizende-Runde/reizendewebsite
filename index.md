@@ -9,7 +9,7 @@
  \
  \
   
-_Reizende Runde_ veranstaltet
+_Reizende Runde_ veranstaltet  
 ## 🂡 ♧ Skat-Turnier an der HU Berlin ♢ 🂺  
 
 Am **09.07.2024**, 17:45 Uhr  
