@@ -12,7 +12,7 @@ jobs:
 
       - uses: docker://pandoc/core:latest
         with:
-          args: -o index.html index.md --metadata title=Skattunier
+          args: -s -V pagetitle="Skatturnier" -o index.html index.md
 
       - uses: EndBug/add-and-commit@v9
         with: 

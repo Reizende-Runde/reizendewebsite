@@ -1,6 +1,5 @@
 <!-- gerne zentriert statt linksbündig alles, und if possible statt der Header einfach groß und fett? Damit diese  -->
 <!-- striche und abstände weggehen -->
-
 _Reizende Runde_ veranstaltet
 
 ## 🂡 ♧ Skat-Turnier an der HU Berlin ♢ 🂺  
