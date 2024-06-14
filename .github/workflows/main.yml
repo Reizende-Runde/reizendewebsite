@@ -12,7 +12,7 @@ jobs:
 
       - uses: docker://pandoc/core:latest
         with:
-          args: -s -V pagetitle="Skatturnier" -c file:style.css -o index.html index.md
+          args: -s --embed-resources -V pagetitle="Skatturnier" -c file:style.css -o index.html index.md
 
       - uses: EndBug/add-and-commit@v9
         with: 
