@@ -1,13 +1,13 @@
 <!-- gerne zentriert statt linksbündig alles, und if possible statt der Header einfach groß und fett? Damit diese  -->
 <!-- striche und abstände weggehen -->
 _Reizende Runde_ veranstaltet
-
-
-
-
-
-
-  
+ \
+ \
+ \
+ \
+ \
+ \
+ \
 ## 🂡 ♧ Skat-Turnier an der HU Berlin ♢ 🂺  
 
 Am **09.07.2024**, 17:45 Uhr  
