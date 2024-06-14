@@ -12,8 +12,10 @@ Im [**Café Flora**](https://maps.app.goo.gl/RK9n2KSjUxHUXJc8A) - auf dem Campus
 
 **Details:** \
 Erwartete Spielzeit: 18:00 - 22:00 Uhr \
-Geplante Runden: 3 Listen á 18 Spiele \
+Geplante Runden: 3 Listen á 12 Spiele \
 Gespielt wird nach der Internationalen Skatordnung (Turnierskat)
+Zeitlimit pro Liste: 50 min (4 min pro Spiel)
 
 **Kontakt:** \
 [reizenderunde@gmail.com](mailto:reizenderunde@gmail.com)
+Berliner Skatverein _Reizende Runde_
