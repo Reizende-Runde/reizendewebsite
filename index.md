@@ -10,8 +10,8 @@
  \
   
 _Reizende Runde_ veranstaltet  
+  
 ## 🂡 ♧ Skat-Turnier an der HU Berlin ♢ 🂺  
-
 Am **09.07.2024**, 17:45 Uhr  
 Im [**Café Flora**](https://maps.app.goo.gl/RK9n2KSjUxHUXJc8A) - auf dem Campus Nord der HU Berlin  
 **Offen** und kostenfrei für Alle  
