@@ -28,4 +28,4 @@ Oberschiedsrichter: Noah Schlüter \
 
 **Kontakt:** \
 [reizenderunde@gmail.com](mailto:reizenderunde@gmail.com)  
-Berliner Skatverein _Reizende Runde_
+Skatverein _Reizende Runde_
