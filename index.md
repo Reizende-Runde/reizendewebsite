@@ -22,7 +22,7 @@ Geplante Runden: 3 Listen á 12-18 Spiele (wird noch festgelegt) \
 Gespielt wird nach der [Internationalen Skatordnung](https://dskv.de/app/uploads/sites/43/2022/11/ISkO-2022.pdf) (Turnierskat)  
 Das Turnier orientiert sich an der [Skatwettspielordnung](https://dskv.de/app/uploads/sites/43/2022/11/ISkO-2022.pdf), ist aber explizit KEIN offiziell anerkanntes Turnier \
 Spieler:innen je Tisch: 3 (4 wenn nötig) \
-Zeitlimit: 3 - 4 min pro Spiel (wird noch festgelegt) \
+Zeitlimit: 4 min pro Spiel \
 Veranstalter: Skatverein Reizende Runde \
 Oberschiedsrichter: Noah Schlüter \
 
