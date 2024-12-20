@@ -1,0 +1,151 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 5px;
+    padding: 0;
+  }
+
+  h1, h2 {
+    margin: 0;
+    padding: 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .container {
+    display: grid;
+    grid-template-rows: auto auto auto auto auto 1fr auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: start;
+  }
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
+  .header {
+    grid-column: 1 / 4;
+  }
+
+  .spielart {
+    grid-column: 1 / 4;
+  }
+
+  .mitOhneFaktor {
+    grid-column: 1 / 4;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .mitOhneFaktor .tile-container {
+    display: flex;
+    gap: 10px;
+  }
+
+  .optionen {
+    grid-column: 1 / 4;
+  }
+
+  .ergebnisKontra {
+    grid-column: 1 / 4;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .bottom-row {
+    grid-column: 1 / 4;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  legend {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .tile-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  input[type=radio],
+  input[type=checkbox] {
+    display: none;
+  }
+
+  .tile {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    height: 60px;
+    background: #f0f0f0;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    padding: 2px;
+    font-size: 14px;
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+
+  .tile span.symbol {
+    font-size: 18px;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .tile:hover {
+    background: #e0e0e0;
+  }
+
+  input[type=radio]:checked + .tile,
+  input[type=checkbox]:checked + .tile {
+    border-color: #007BFF;
+    background: #d0e4ff;
+  }
+
+  #result, #summary {
+    font-size: 1em;
+    margin: 0;
+  }
+
+  button[type=submit] {
+    font-size: 16px;
+    padding: 5px 10px;
+  }
+
+  select {
+    font-size: 14px;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  select:focus {
+    outline: none;
+  }

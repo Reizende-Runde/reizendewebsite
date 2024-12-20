@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skat Rechner</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<form id="skatForm" class="container">
+  <div class="header">
+    <h1>Skat Rechner</h1>
+  </div>
+
+  <!-- SpielArt -->
+  <fieldset class="spielart">
+    <legend>Farb- und Sonderspiele</legend>
+    <div class="tile-container">
+      <label>
+        <input type="radio" name="spielArt" value="Karo">
+        <div class="tile">
+          <span class="symbol">♦️</span>Karo
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Herz">
+        <div class="tile">
+          <span class="symbol">♥️</span>Herz
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Pik">
+        <div class="tile">
+          <span class="symbol">♠️</span>Pik
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Kreuz">
+        <div class="tile">
+          <span class="symbol">♣️</span>Kreuz
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Grand">
+        <div class="tile">
+          <span class="symbol">G</span>Grand
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Null">
+        <div class="tile">
+          <span class="symbol">N</span>Null
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Null Hand">
+        <div class="tile">
+          <span class="symbol">N👐</span>Null Hand
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Null Ouvert">
+        <div class="tile">
+          <span class="symbol">N👀</span>Null O.
+        </div>
+      </label>
+      <label>
+        <input type="radio" name="spielArt" value="Null Hand Ouvert">
+        <div class="tile">
+          <span class="symbol">N👐👀</span>Null H. O.
+        </div>
+      </label>
+      </div>
+  </fieldset>
+
+  <!-- Mit/Ohne and Faktor -->
+  <div class="mitOhneFaktor">
+    <fieldset>
+      <legend>Buben</legend>
+      <div class="tile-container">
+        <label>
+          <input type="radio" name="mitOhne" value="Mit">
+          <div class="tile">
+            <span class="symbol">➕</span>Mit
+          </div>
+        </label>
+        <label>
+          <input type="radio" name="mitOhne" value="Ohne">
+          <div class="tile">
+            <span class="symbol">➖</span>Ohne
+          </div>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>⠀</legend>
+      <div class="tile-container">
+        <label>
+          <input type="radio" name="faktor" value="1">
+          <div class="tile">
+            <span class="symbol">1</span>
+          </div>
+        </label>
+        <label>
+          <input type="radio" name="faktor" value="2">
+          <div class="tile">
+            <span class="symbol">2</span>
+          </div>
+        </label>
+        <label>
+          <input type="radio" name="faktor" value="3">
+          <div class="tile">
+            <span class="symbol">3</span>
+          </div>
+        </label>
+        <label>
+          <input type="radio" name="faktor" value="4">
+          <div class="tile">
+            <span class="symbol">4</span>
+          </div>
+        </label>
+        <!-- Dropdown as a tile -->
+        <label>
+          <input type="radio" name="faktor" value="dropdown">
+          <div class="tile">
+            <select name="faktorDropdown">
+              <option value="">-</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+              <option value="11">11</option>
+            </select>
+          </div>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+
+  <!-- Optionen -->
+  <fieldset class="optionen">
+    <legend>Ansagen</legend>
+    <div class="tile-container">
+      <label>
+        <input type="checkbox" name="optionen" value="Hand">
+        <div class="tile">Hand</div>
+      </label>
+      <label>
+        <input type="checkbox" name="optionen" value="Schneider">
+        <div class="tile">Schneider</div>
+      </label>
+      <label>
+        <input type="checkbox" name="optionen" value="Schneider angesagt">
+        <div class="tile">... angesagt</div>
+      </label>
+      <label>
+        <input type="checkbox" name="optionen" value="Schwarz">
+        <div class="tile">Schwarz</div>
+      </label>
+      <label>
+        <input type="checkbox" name="optionen" value="Schwarz angesagt">
+        <div class="tile">... angesagt</div>
+      </label>
+      <label>
+        <input type="checkbox" name="optionen" value="Ouvert">
+        <div class="tile">Ouvert</div>
+      </label>
+    </div>
+  </fieldset>
+
+  <!-- Ergebnis and Kontra/Re -->
+  <div class="ergebnisKontra">
+    <fieldset>
+      <legend>Ergebnis</legend>
+      <div class="tile-container">
+        <label>
+          <input type="radio" name="ergebnis" value="Gewonnen">
+          <div class="tile">
+            <span class="symbol">✅</span>Gewonnen
+          </div>
+        </label>
+        <label>
+          <input type="radio" name="ergebnis" value="Verloren">
+          <div class="tile">
+            <span class="symbol">❌</span>Verloren
+          </div>
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Kontra/Re</legend>
+      <div class="tile-container">
+        <label>
+          <input type="checkbox" name="kontraRe" value="Kontra">
+          <div class="tile">Kontra</div>
+        </label>
+        <label>
+          <input type="checkbox" name="kontraRe" value="Re">
+          <div class="tile">Re</div>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+
+  <div class="bottom-row">
+    <button type="submit">Berechnen</button>
+    <div><strong>Berechneter Spielwert:</strong> <span id="result"></span></div>
+    <div><strong>Zusammenfassung:</strong> <span id="summary"></span></div>
+  </div>
+</form>
+
+<script src="script.js"></script>
+</body>
+</html>
