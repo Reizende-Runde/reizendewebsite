@@ -1,0 +1,261 @@
+body {
+    font-family: Arial, sans-serif;
+    margin-top: 0px;
+    padding: 0;
+  }
+
+  h1, h2 {
+    margin: 0;
+    padding: 0;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 0;
+  }
+
+  .container {
+    display: grid;
+    grid-template-rows: auto auto auto auto auto 1fr auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: start;
+    justify-items: center;
+  }
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
+ 
+
+  .spielart {
+    grid-column: 1 / 4;
+    margin-top: 30px;
+  }
+
+  .mitOhneFaktor {
+    grid-column: 1 / 4;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .mitOhneFaktor .tile-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .optionen {
+    grid-column: 1 / 4;
+    margin-top: 10px;
+  }
+
+  .ergebnisKontra {
+    grid-column: 1 / 4;
+    display: flex;
+    gap: 100px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  .bottom-row {
+    grid-column: 1 / 4;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-top: 10px;
+  }
+
+  fieldset {
+    border: none !important; 
+    margin: 0;
+    padding: 0;
+  }
+
+  legend {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  .tile-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  input[type=radio],
+  input[type=checkbox] {
+    display: none;
+  }
+
+  .tile {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    height: 60px;
+    background: #f0f0f0;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    padding: 2px;
+    font-size: 14px;
+    user-select: none;
+    transition: all 0.2s ease;
+  }
+
+  .tile span.symbol {
+    font-size: 30px;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  .tile:hover {
+    background: #e0e0e0;
+  }
+
+  input[type=radio]:checked + .tile,
+  input[type=checkbox]:checked + .tile {
+    border-color: #007BFF;
+    background: #d0e4ff;
+  }
+  /* (1) Basis-Style für deine Null-Tiles */
+.tile-null {
+  /* Wenn du das inline-flex nicht brauchst, kannst du auf block/flex schalten: */
+  position: relative;
+  display: block;  /* oder display: flex; wenn du möchtest */
+  
+  width: 60px;
+  height: 60px;
+
+  background: #f0f0f0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+/* (2) Das große „N“ mittig platzieren */
+.tile-null .letterN {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  font-size: 30px; /* oder größer/kleiner nach Bedarf */
+  line-height: 1;
+  font-weight: bold;
+}
+
+/* (3) Die kleinen Icons an der Ecke oder teils überlappend */
+.tile-null .overlayIcons {
+  position: absolute;
+  top: 22%;      /* anpassen, damit es teilweise das "N" überlappt */
+  right: -3px;    /* z. B. rechts in der Mitte */
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* Hover-/Checked-Zustände kannst du übernehmen, z.B. */
+.tile-null:hover {
+  background: #e0e0e0;
+}
+
+input[type=radio]:checked + .tile-null {
+  border-color: #007BFF;
+  background: #d0e4ff;
+}
+
+/* Base styling (similar to .tile-null) */
+.tile-ansage {
+  position: relative; 
+  display: block;     /* override .tile’s inline-flex if needed */
+  width: 60px; 
+  height: 60px;
+  background: #f0f0f0;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+/* Large central label */
+.tile-ansage .ansageLabel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 30px;  /* adjust to taste */
+  line-height: 1;
+  font-weight: bold;
+}
+
+/* Small overlay icon/text */
+.tile-ansage .overlayIcons {
+  position: absolute;
+  top: 15%;     /* tweak these to overlap or position as you wish */
+  right: -3px;
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Hover style (optional) */
+.tile-ansage:hover {
+  background: #e0e0e0;
+}
+
+/* Checked style if needed (similar to .tile) */
+input[type=checkbox]:checked + .tile-ansage,
+input[type=radio]:checked + .tile-ansage {
+  border-color: #007BFF;
+  background: #d0e4ff;
+}
+
+  #result, #summary {
+    font-size: 1em;
+    margin: 0;
+  }
+
+  button[type=submit] {
+    font-size: 16px;
+    padding: 5px 10px;
+  }
+
+  .tile select {
+    font-size: 30px;      /* match digits to others */
+    line-height: 60px;    /* same as tile height */
+    text-align: center;   /* horizontal centering */
+    
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
+  select:focus {
+    outline: none;
+  }
+  .container {
+    display: grid;
+    grid-template-rows: auto auto auto auto auto 1fr auto;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    align-items: start;
+    max-width: 800px; /* Passen Sie die Breite nach Bedarf an */
+    margin: 0 auto; /* Zentriert den Container horizontal */
+}

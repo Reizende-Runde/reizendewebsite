@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reizende Runde – Skat Rechner</title>
+
+  <!-- Google Fonts (falls notwendig) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
+    rel="stylesheet"
+  >
+  <!-- FontAwesome für Icons -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
+    integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2DhO5MtC2C+bZc6EIzvSUi5+vK9SNAIBd+y2iEGUpV5o2pyT4EbayGURt07zQhfgg==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer"
+  >
+
+  <!-- Deine (vereinheitlichtes) Stylesheets -->
+  <link rel="stylesheet" href="../Landingpage/style.css">
+  <link rel="stylesheet" href="../Mitgliederbereich/style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER (Sticky, ähnlich wie Landing Page) -->
+  <header>
+    <a href="../Landingpage/index.html" class="logo">Reizende Runde</a>
+    
+    <!-- Navigation -->
+    <nav>
+      <ul>
+        <li><a href="../Landingpage/index.html#about">Über uns</a></li>
+        <li><a href="../Landingpage/index.html#aktuelles">Aktuelles</a></li>
+        <li><a href="../Landingpage/index.html#termine">Termine</a></li>
+        <li><a href="../Landingpage/index.html#mitglied">Mitglied werden</a></li>
+        <li><a href="../Landingpage/index.html#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+
+    <!-- Bereich für Button + Hamburger-Menü (oben rechts) -->
+    <div class="header-right">
+      <div class="member-area">
+        <a href="../Mitgliederbereich/content.html" class="member-btn">
+          <i class="fas fa-user-lock"></i> Mitgliederbereich
+        </a>
+      </div>
+      <!-- Mobile-Hamburger-Icon -->
+      <div class="hamburger"><i class="fas fa-bars"></i></div>
+    </div>
+  </header>
+
+  <!-- ALTERNATIVES BANNER -->
+  <section class="simple-banner">
+    <h1>Skat Rechner</h1>
+    <p>Berechne schnell und einfach deinen Spielwert</p>
+  </section>
+
+  <!-- HAUPTINHALT -->
+  <main>
+    <!-- Skat-Rechner-Formular -->
+    <form id="skatForm" class="container">
+      <!-- SpielArt -->
+      <fieldset class="spielart">
+        <legend>Farb- und Sonderspiele</legend>
+        <div class="tile-container">
+          <label title="Karo">
+            <input type="radio" name="spielArt" value="Karo">
+            <div class="tile">
+              <span class="symbol">♦️</span>
+            </div>
+          </label>
+          <label title="Herz">
+            <input type="radio" name="spielArt" value="Herz">
+            <div class="tile">
+              <span class="symbol">♥️</span>
+            </div>
+          </label>
+          <label title="Pik">
+            <input type="radio" name="spielArt" value="Pik">
+            <div class="tile">
+              <span class="symbol">♠️</span>
+            </div>
+          </label>
+          <label title="Kreuz">
+            <input type="radio" name="spielArt" value="Kreuz">
+            <div class="tile">
+              <span class="symbol">♣️</span>
+            </div>
+          </label>
+          <label title="Grand">
+            <input type="radio" name="spielArt" value="Grand">
+            <div class="tile">
+              <span class="symbol"><b>G</b></span>
+            </div>
+          </label>
+          <label title="Null">
+            <input type="radio" name="spielArt" value="Null">
+            <div class="tile tile-null">
+              <span class="letterN">N</span>
+            </div>
+          </label>
+          <label title="Null Hand">
+            <input type="radio" name="spielArt" value="Null Hand">
+            <div class="tile tile-null">
+              <span class="letterN">N</span>
+              <span class="overlayIcons">✋<br></span>
+            </div>
+          </label>
+          <label title="Null Ouvert">
+            <input type="radio" name="spielArt" value="Null Ouvert">
+            <div class="tile tile-null">
+              <span class="letterN">N</span>
+              <span class="overlayIcons"><br>👁️</span>
+            </div>
+          </label>
+          <label title="Null Hand Ouvert">
+            <input type="radio" name="spielArt" value="Null Hand Ouvert">
+            <div class="tile tile-null">
+              <span class="letterN">N</span>
+              <span class="overlayIcons">✋<br>👁️</span>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Mit/Ohne and Faktor -->
+      <div class="mitOhneFaktor">
+        <fieldset>
+          <legend>Buben</legend>
+          <div class="tile-container">
+            <label title="Mit...">
+              <input type="radio" name="mitOhne" value="Mit">
+              <div class="tile">
+                <span class="symbol">➕</span>
+              </div>
+            </label>
+            <label title="Ohne...">
+              <input type="radio" name="mitOhne" value="Ohne">
+              <div class="tile">
+                <span class="symbol">➖</span>
+              </div>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>⠀</legend>
+          <div class="tile-container">
+            <label title="1">
+              <input type="radio" name="faktor" value="1">
+              <div class="tile">
+                <span class="symbol">1</span>
+              </div>
+            </label>
+            <label title="2">
+              <input type="radio" name="faktor" value="2">
+              <div class="tile">
+                <span class="symbol">2</span>
+              </div>
+            </label>
+            <label title="3">
+              <input type="radio" name="faktor" value="3">
+              <div class="tile">
+                <span class="symbol">3</span>
+              </div>
+            </label>
+            <label title="4">
+              <input type="radio" name="faktor" value="4">
+              <div class="tile">
+                <span class="symbol">4</span>
+              </div>
+            </label>
+            <!-- Dropdown als Tile -->
+            <label title="5-11">
+              <input type="radio" name="faktor" value="dropdown">
+              <div class="tile">
+                <select name="faktorDropdown">
+                  <option value="">-</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="7">7</option>
+                  <option value="8">8</option>
+                  <option value="9">9</option>
+                  <option value="10">10</option>
+                  <option value="11">11</option>
+                </select>
+              </div>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+
+      <!-- Optionen -->
+      <fieldset class="optionen">
+        <legend>Ansagen</legend>
+        <div class="tile-container">
+          <label title="Hand">
+            <input type="checkbox" name="optionen" value="Hand">
+            <div class="tile"> 
+              <span class="symbol">✋</span>
+            </div>
+          </label>
+          <label title="Schneider">
+            <input type="checkbox" name="optionen" value="Schneider">
+            <div class="tile tile-ansage">
+              <span class="ansageLabel">30</span>
+            </div>
+          </label>
+          <label title="Schneider angesagt">
+            <input type="checkbox" name="optionen" value="Schneider angesagt">
+            <div class="tile tile-ansage">
+              <span class="ansageLabel">30</span>
+              <span class="overlayIcons">📢</span>
+            </div>
+          </label>
+          <label title="Schwarz">
+            <input type="checkbox" name="optionen" value="Schwarz">
+            <div class="tile tile-ansage">
+              <span class="ansageLabel">⬛</span>
+            </div>
+          </label>
+          <label title="Schwarz angesagt">
+            <input type="checkbox" name="optionen" value="Schwarz angesagt">
+            <div class="tile tile-ansage">
+              <span class="ansageLabel">⬛</span>
+              <span class="overlayIcons">📢</span>
+            </div>
+          </label>
+          <label title="Ouvert">
+            <input type="checkbox" name="optionen" value="Ouvert">
+            <div class="tile tile-ansage">
+              <span class="ansageLabel">👁️</span>
+            </div>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Ergebnis and Kontra/Re -->
+      <div class="ergebnisKontra">
+        <fieldset>
+          <legend>Ergebnis</legend>
+          <div class="tile-container">
+            <label title="Gewonnen">
+              <input type="radio" name="ergebnis" value="Gewonnen">
+              <div class="tile">
+                <span class="symbol">✅</span>
+              </div>
+            </label>
+            <label title="Verloren">
+              <input type="radio" name="ergebnis" value="Verloren">
+              <div class="tile">
+                <span class="symbol">❌</span>
+              </div>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Kontra/Re</legend>
+          <div class="tile-container">
+            <label title="Kontra">
+              <input type="checkbox" name="kontraRe" value="Kontra">
+              <div class="tile"><span class="symbol">⚔️</span></div>
+            </label>
+            <label title="Re">
+              <input type="checkbox" name="kontraRe" value="Re">
+              <div class="tile"><span class="symbol">🛡️</span></div>
+            </label>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="bottom-row">
+        <button type="submit">Berechnen</button>
+        <div><strong>Berechneter Spielwert:</strong> <span id="result"></span></div>
+        <div><strong>Zusammenfassung:</strong> <span id="summary"></span></div>
+        <button type="submit" id="resetForm" >Reset</button>
+      </div>
+    </form>
+  </main>
+
+  <!-- FUSSZEILE (ähnlich wie Landing Page) -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Kontakt</h4>
+        <ul>
+          <li>Skatverein Reizende Runde</li>
+          <li>Noah Schlüter</li>
+          <li>Köpenicker Landstraße 254</li>
+          <li>12437 Berlin</li>
+          <li>Tel: +49 (0)176 31305673</li>
+          <li><a href="mailto:info@reizenderunde.de">info@reizenderunde.de</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Menü</h4>
+        <ul>
+          <li><a href="../index.html#about">Über uns</a></li>
+          <li><a href="../index.html#aktuelles">Aktuelles</a></li>
+          <li><a href="../index.html#termine">Termine</a></li>
+          <li><a href="../index.html#mitglied">Mitglied werden</a></li>
+          <li><a href="../index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Folge uns</h4>
+        <ul>
+          <li><a href="#"><i class="fab fa-instagram-square"></i> Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2024 Reizende Runde – Alle Rechte vorbehalten.
+    </div>
+  </footer>
+
+  <!-- Skript-Datei -->
+  <script src="script.js"></script>
+</body>
+</html>
