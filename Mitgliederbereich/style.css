@@ -1,0 +1,31 @@
+    .simple-banner {
+      background-color: #1c1c1c; /* same maisn color as header */
+      color: #fff;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    .simple-banner h1 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .simple-banner p {
+      font-size: 1rem;
+      max-width: 600px;
+      margin: 0.5rem auto;
+      line-height: 1.6;
+    }
+    html {
+        scroll-behavior: smooth;
+        /* z. B. damit das Springen weicher ist */
+      }
+      
+      :root {
+        --header-height: 70px; /* oder wie hoch dein Header wirklich ist */
+      }
+      
+      /* Das sorgt dafür, dass wenn du auf #about, #termine usw. klickst,
+         automatisch +70px Platz gelassen wird */
+      body {
+        scroll-padding-top: var(--header-height);
+      }
+      
