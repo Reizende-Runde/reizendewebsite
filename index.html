@@ -1,29 +1,222 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="generator" content="pandoc" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Skatturnier</title>
-  <style>
-code{white-space: pre-wrap;}
-span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
-div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reizende Runde – Skatverein</title>
+  <!-- Google Fonts Beisspiel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
+    rel="stylesheet">
+  <!-- Falls benötigt: FontAwesome für Icons -->
+  <link 
+    rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
+    integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2DhO5MtC2C+bZc6EIzvSUi5+vK9SNAIBd+y2iEGUpV5o2pyT4EbayGURt07zQhfgg==" 
+    crossorigin="anonymous" 
+    referrerpolicy="no-referrer"
+  />
 
-ul.task-list[class]{list-style: none;}
-ul.task-list li input[type="checkbox"] {
-font-size: inherit;
-width: 0.8em;
-margin: 0 0.8em 0.2em -1.6em;
-vertical-align: middle;
-}
-.display.math{display: block; text-align: center; margin: 0.5rem auto;}
-</style>
-  <link rel="stylesheet" href="file:style.css" />
+  <!-- Dein externes Stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+  <!-- HEADER -->
+  <header>
+    <div class="logo">Reizende Runde</div>
+    
+    <!-- Navigation (Platzhalter) -->
+    <nav>
+      <ul>
+        <li><a href="#about">Über uns</a></li>
+        <li><a href="#aktuelles">Aktuelles</a></li>
+        <li><a href="#termine">Termine</a></li>
+        <li><a href="#mitglied">Mitglied werden</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+
+    <!-- Bereich für Button + Hamburger-Menü (oben rechts) -->
+    <div class="header-right">
+      <!-- NEUER BUTTON für Mitglieder-Login -->
+      <div class="member-area">
+        <a href="Mitgliederbereich" class="member-btn">
+          <i class="fas fa-user-lock"></i> Mitgliederbereich
+        </a>
+      </div>
+      <!-- Mobile-Hamburger-Icon (Beispiel) -->
+      <div class="hamburger"><i class="fas fa-bars"></i></div>
+    </div>
+  </header>
+
+  <!-- HERO-BEREICH -->
+  <section class="hero">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Herzlich Willkommen bei der Reizenden Runde!</h1>
+      <p>Dein moderner Skatverein für alle, die das Kartenspiel lieben.<br>
+        Werde Teil unserer Gemeinschaft!</p>
+      <a href="#mitglied" class="cta-button">Jetzt Mitglied werden</a>
+    </div>
+  </section>
+
+  <!-- ÜBER UNS -->
+  <section id="about" class="about">
+    <h2>Über uns</h2>
+    <p>
+        Seit unserer Gründung im Sommer 2023 ist es der Zweck unseres Vereins, unseren Mitglieder*innen 
+        und allen Interessierten zu ermöglichen, das Kartenspiel Skat zu
+        lernen, zu spielen und sich zu diesem Zweck zu treffen. Wir wollen 
+        den Austausch von Skat-bezogenen Themen unterstützen und
+        die Kultur des Skatspiels fortführen. 
+      <br><br>
+      Ob Anfänger oder Profi – bei uns ist jeder willkommen! Insbesondere soll der Verein
+      den Einstieg und das Erlernen der Regeln des Skatspiels vereinfachen 
+      und dabei die Vielfalt der Skatspieler*innenschaft fördern.
+      <br><br>
+      Die Reizende Runde ist am 15.07.2023 als nicht eingetragener Verein in Berlin gegründet worden. 
+      Der Verein hat derzeit etwa 20 Mitglieder. 
+      
+    </p>
+  </section>
+
+  <!-- AKTUELLES / NEWS -->
+  <section id="aktuelles" class="news">
+    <h2>Aktuelles</h2>
+    <div class="news-items">
+      <div class="news-item">
+        <h3>Saisonstart</h3>
+        <p>
+          Die neue Skat-Saison hat begonnen! Wir freuen uns über alle, die 
+          dabei sein möchten. Jedes letzte Wochenende im Monat ist Monatsskat.
+        </p>
+      </div>
+      <div class="news-item">
+        <h3>Neujahrsskat 2025</h3>
+        <p>
+          Die traditionelle Sasion- und Jahreseröffnung steht an! Der Neujahrsskat in der ersten Januarwoche!
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="termine" class="termine">
+    <h2>Termine</h2>
+    <p>(Noch in Arbeit – hier werden bald alle anstehenden Spielabende und Events zu finden sein.)</p>
+  </section>
+
+  <!-- MITGLIED WERDEN (Platzhalter) -->
+  <section id="mitglied" class="mitglied">
+    <h2>Mitglied werden</h2>
+    <p>(Noch in Arbeit – Nutz zwischenzeitlich gerne das Kontaktformular oder schreibe uns eine E-Mail an info&#64;reizenderunde.de.)</p>
+  </section>
+
+  <!-- KONTAKT -->
+  <section id="kontakt" class="kontakt">
+    <h2>Kontakt</h2>
+    <p>Hast du Fragen oder Anmerkungen? Dann schreib uns gern!</p>
+    
+    <form id="contact-form" class="styled-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="email">E-Mail</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="message">Nachricht</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+      </div>
+      
+      <button type="submit" class="btn-submit">Abschicken</button>
+    </form>
+    
+    <!-- EmailJS Script-Library einbinden -->
+    <script 
+      type="text/javascript" 
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <script>
+      // 1) EmailJS initialisieren
+      (function(){
+        // Hier kommt deine User-ID (Public Key) rein, die du im Dashboard findest
+        emailjs.init("DYOZc_97f-5clBsJC");
+      })();
+  
+      // 2) Formularverhalten definieren
+      document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Standard-Formularverhalten (Seiten-Reload) verhindern
+  
+        // Formularwerte auslesen
+        const nameValue = document.getElementById('name').value;
+        const emailValue = document.getElementById('email').value;
+        const messageValue = document.getElementById('message').value;
+  
+        // Objekt für EmailJS vorbereiten 
+        // Hinweis: Diese Variablennamen sollten zu deinem Template passen
+        const templateParams = {
+          name: nameValue,
+          email: emailValue,
+          message: messageValue
+        };
+  
+        // 3) Email versenden
+        emailjs.send("service_gxvroin", "template_wp3t88i", templateParams)
+          .then(function(response) {
+            // Erfolg
+            alert("Deine Nachricht wurde erfolgreich gesendet!");
+            // Optional: Formular zurücksetzen
+            document.getElementById('contact-form').reset();
+          }, function(error) {
+            // Fehler
+            alert("Es gab ein Problem beim Versenden deiner Nachricht. Versuche es bitte später erneut.");
+            console.error("EmailJS Error:", error);
+          });
+      });
+    </script>
+  </section>
+
+  <!-- FUSSZEILE -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Kontakt</h4>
+        <ul>
+          <li>Skatverein Reizende Runde</li>
+          <li>Noah Schlüter</li>
+          <li>Köpenicker Landstraße 254</li>
+          <li>12437 Berlin</li>
+          <li>Tel: +49 (0)176 31305673</li>
+          <li><a href="mailto:info&#64;reizenderunde.de">info&#64;reizenderunde.de</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Menü</h4>
+        <ul>
+          <li><a href="#about">Über uns</a></li>
+          <li><a href="#aktuelles">Aktuelles</a></li>
+          <li><a href="#termine">Termine</a></li>
+          <li><a href="#mitglied">Mitglied werden</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Folge uns</h4>
+        <ul>
+          <li><a href="https://www.instagram.com/reizenderunde" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram-square"></i> Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2024 Reizende Runde – Alle Rechte vorbehalten.
+    </div>
+  </footer>
 </body>
 </html>
