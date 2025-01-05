@@ -83,7 +83,7 @@
   /* ---------------------------------------- */
   .hero {
     position: relative;
-    background: url('https://skatturnier.github.io/assets/hero-blur.webp') center/cover no-repeat;
+    background: url('https://raw.githubusercontent.com/haumbaus/reizendewebsite/refs/heads/main/assets/hero-blur.webp') center/cover no-repeat;
     height: 70vh;
     display: flex;
     align-items: center;
