@@ -128,6 +128,91 @@
   /* ---------------------------------------- */
   /* Standardabschnitte (section), z.B. About */
   /* ---------------------------------------- */
+ 
+  .modal {
+    display: none; /* Standardmäßig verborgen */
+    position: fixed; /* Bleibt an der gleichen Stelle */
+    z-index: 1000; /* Über allen anderen Elementen */
+    left: 0;
+    top: 0;
+    width: 100%; /* Volle Breite */
+    height: 100%; /* Volle Höhe */
+    overflow: auto; /* Scrollen bei Bedarf */
+    background-color: rgba(0, 0, 0, 0.5); /* Halbtransparenter Hintergrund */
+  }
+  
+  /* Modal-Inhalt */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; /* 10% von oben, zentriert */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 400px; /* Maximale Breite */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    font-family: 'Open Sans', sans-serif;
+  }
+  
+  /* Schließen-Button */
+  .close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+  }
+  
+  .close-button:hover,
+  .close-button:focus {
+    color: #000;
+    text-decoration: none;
+  }
+  
+  /* Formular-Styling */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #b21f2d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  
+  button[type="submit"]:hover {
+    background-color: #a01925;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+  }
+  
   section {
     padding: 3rem 1rem;
     max-width: 1200px;
@@ -357,3 +442,5 @@
   section[termine] {
     scroll-margin-top: 80px;
   }
+
+

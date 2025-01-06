@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mitgliederbereich – Reizende Runde</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <!-- Firebase Authentication -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  
   <!-- Googles Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,10 +16,10 @@
     rel="stylesheet"
   >
   <!-- FontAwesome (if needed) -->
-  <!-- <link rel="stylesheet" 
+   <link rel="stylesheet" 
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
   integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" 
-  crossorigin="anonymous"> -->
+  crossorigin="anonymous">
 
   <!-- Link to your external CSS -->
   <link rel="stylesheet" href="../style.css">
@@ -67,134 +71,11 @@
         und vieles mehr.
       </p>
     </section>
-
-    <!-- Card Grid Section -->
-    <section class="news" style="padding:1rem 1rem 3rem;">
-      <h2 style="text-align:center;">Unsere Inhalte</h2>
-      
-      <div class="news-items" 
-           style="display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:1rem; max-width:1200px; margin:0 auto;">
-
-        <!-- Card 1 -->
-        <div class="news-item" 
-             style="background-color:#f9f9f9; border-radius:4px; border-left:4px solid #b21f2d; overflow:hidden;">
-             <a 
-                href="../EwigeListe" 
-                style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-                target="" rel="noopener noreferrer">
-                <img 
-                    src="https://raw.githubusercontent.com/haumbaus/reizendewebsite/refs/heads/main/assets/ewige-liste.webp" 
-                    alt="Ewige Liste" 
-                    style="width:100%; object-fit:cover;"
-                ></a>
-          <div style="padding:1rem;">
-            <h3 style="margin-bottom:0.5rem;"><a 
-                href="../EwigeListe" 
-                style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-                target="" rel="noopener noreferrer"
-              >Ewige Liste</a></h3>
-            <p>
-              Google Sheets zum Eintragen von Listenergebnissen 
-            und Vergleich von Statsitiken.
-            </p>
-            <a 
-              href="../EwigeListe" 
-              style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-              target="" rel="noopener noreferrer"
-            >
-              Link zur Tabelle
-            </a>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-       <div class="news-item" 
-       style="background-color:#f9f9f9; border-radius:4px; border-left:4px solid #b21f2d; overflow:hidden;">
-       <a 
-          href="../Rechner" 
-          style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-          >
-          <img 
-              src="https://raw.githubusercontent.com/haumbaus/reizendewebsite/refs/heads/main/assets/rechner.webp" 
-              alt="Punkte Rechner" 
-              style="width:100%; object-fit:cover;"
-          ></a>
-            <div style="padding:1rem;">
-            <h3 style="margin-bottom:0.5rem;"><a 
-                href="../Rechner"  
-                style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-                
-                >Punkte Rechner</a></h3>
-            <p>
-                Interaktives Tool zum Berechnen von Reizwerten und Listenpunkten.
-            </p>
-            <a 
-                href="../Rechner"  
-                style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-                
-            >
-                Link zum Rechner
-            </a>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="news-item" 
-       style="background-color:#f9f9f9; border-radius:4px; border-left:4px solid #b21f2d; overflow:hidden;">
-       <a 
-          href="../ListeEintragen" 
-          style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-          >
-          <img 
-              src="https://raw.githubusercontent.com/haumbaus/reizendewebsite/refs/heads/main/assets/listen-eintragen.webp" 
-              alt="Listen eintragen" 
-              style="width:100%; object-fit:cover;"
-          ></a>
-            <div style="padding:1rem;">
-            <h3 style="margin-bottom:0.5rem;"><a 
-                href="../ListeEintragen"  
-                style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-                
-                >Listen eintragen</a></h3>
-            <p>
-                Hier kannst du die Daten zu einer abgeschlossenen Liste eintragen.
-                Die Eingaben werden an die Ewige Liste übergeben.
-            </p>
-            <a 
-                href="../ListeEintragen"  
-                style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-                
-            >
-                Link zum Formular
-            </a>
-            </div>
-        </div>
-
-
-        <!-- Card 4 -->
-        <div class="news-item" 
-             style="background-color:#f9f9f9; border-radius:4px; border-left:4px solid #b21f2d; overflow:hidden;">
-          <img 
-            src="https://via.placeholder.com/800x400?text=" 
-            alt="In Arbeit" 
-            style="width:100%; object-fit:cover;"
-          >
-          <div style="padding:1rem;">
-            <h3 style="margin-bottom:0.5rem;">In Arbeit.</h3>
-            <p>
-                In Arbeit.
-            </p>
-            <a 
-              href="https://dein-forum-link.de" target="_blank" 
-              style="display:inline-block; margin-top:0.5rem; color:#b21f2d; font-weight:bold;"
-            >
-                In Arbeit.
-            </a>
-          </div>
-        </div>
-
-      </div>
-    </section>
+    <div id="content">
+      <p>Loading protected content...</p>
+    </div>
+    <div id="error" class="error"></div>
+    <button id="logout">Logout</button>
   </main>
 
   <!-- FOOTER (same as landing page) -->
@@ -232,4 +113,85 @@
     </div>
   </footer>
 </body>
+<script>
+  // Replace with your Firebase project configuration
+  const firebaseConfig = {
+
+    apiKey: "AIzaSyAXnqylIvad60Aukj3DVNLoV-loRmZMd0g",
+
+    authDomain: "reizendesbackend.firebaseapp.com",
+
+    projectId: "reizendesbackend",
+
+    storageBucket: "reizendesbackend.firebasestorage.app",
+
+    messagingSenderId: "239229132288",
+
+    appId: "1:239229132288:web:a398a64dba3fb0c7fac2e5"
+
+    };
+
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Function to fetch protected content from Cloud Function
+  async function fetchProtectedContent() {
+    const idToken = sessionStorage.getItem('idToken');
+    if (!idToken) {
+      // No token, redirect to login
+      window.location.href = '../index.html';
+      return;
+    }
+
+    try {
+      const response = await fetch('https://getprotectedcontent-bgere4kdla-uc.a.run.app ', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({}) // Add any necessary data
+      });
+
+      if (response.ok) {
+      const data = await response.json();
+      const htmlContent = data.htmlContent;
+      document.getElementById('content').innerHTML = htmlContent;
+    } else {
+      console.error('Failed to fetch protected content:', response.statusText);
+    }
+    } catch (error) {
+      console.error('Error fetching protected content:', error);
+      document.getElementById('error').textContent = 'Access denied. Please log in again.';
+      // Optionally, redirect to login
+      setTimeout(() => {
+        window.location.href = '../index.html';
+      }, 3000);
+    }
+  }
+
+  // Check authentication state on page load
+  window.onload = () => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        fetchProtectedContent();
+      } else {
+        window.location.href = '../index.html';
+      }
+    });
+  };
+
+  // Logout functionality
+  document.getElementById('logout').addEventListener('click', async () => {
+    try {
+      await auth.signOut();
+      sessionStorage.removeItem('idToken');
+      window.location.href = '../index.html';
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  });
+</script>
 </html>
