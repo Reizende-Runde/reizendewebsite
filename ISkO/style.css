@@ -1,0 +1,111 @@
+/* The outer container for the entire PDF viewer. */
+#outerContainer {
+    background-color: #f7f7f7; /* a light background for the main viewer area (optional) */
+    color: #333; /* default text color */
+  }
+  
+  /* The top toolbar area. */
+  #toolbarContainer {
+    background-color: #1c1c1c; /* match your banner color */
+    color: #fff; /* white text */
+    border: none;
+  }
+  
+  /* Buttons in the top toolbar (search, zoom, etc.). */
+  .toolbarButton,
+  #scaleSelectContainer select,
+  #viewFindBar input[type="text"] {
+    background-color: #2b2b2b; /* slightly lighter dark background for controls */
+    color: #fff;
+    border: 1px solid #3a3a3a;
+    border-radius: 5px;
+    margin: 0 2px;
+    padding: 0.2rem 0.5rem;
+  }
+  
+  /* Buttons on hover/focus. */
+  .toolbarButton:hover,
+  #scaleSelectContainer select:hover,
+  #viewFindBar input[type="text"]:hover {
+    background-color: #3a3a3a;
+    color: #fff;
+  }
+  
+  /* The search input box in the "Find" bar. */
+  #viewFindBar {
+    background-color: #1c1c1c; /* same dark color as the toolbar */
+    color: #fff;
+  }
+  
+  /* The search highlights & matches panel can keep a neutral background. */
+  #findResultsContainer {
+    background-color: #2b2b2b;
+    color: #fff;
+  }
+  
+  /* The search message text (e.g., "No matches found"). */
+  .findbarMessage {
+    color: #fff;
+  }
+  
+  /* The search next/prev buttons. */
+  #findPrevious, #findNext {
+    background-color: #2b2b2b;
+    color: #fff;
+    border: 1px solid #3a3a3a;
+    border-radius: 5px;
+    padding: 0.2rem 0.5rem;
+  }
+  #findPrevious:hover, #findNext:hover {
+    background-color: #3a3a3a;
+  }
+/* The scrollable area that holds PDF pages. */
+#viewerContainer {
+    background-color: #fff; /* White so the PDF stands out */
+    color: #333;
+    border-radius: 0 0 10px 10px; /* if you want slight rounding at bottom corners */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* subtle shadow similar to #content */
+    padding: 0; /* Usually no extra padding needed */
+    border-width: 0;
+  }
+  #viewerContainer {
+    background-color: #f7f7f7; 
+  }
+/* The sidebar container (thumbnails, outline, attachments). */
+#sidebarContainer {
+    background-color: #f7f7f7;
+    color: #8e2f2f;
+    border-right: 1px solid #ccc;
+  }
+  
+  /* Thumbnail images have a white background. You can keep that or darken it slightly. */
+  .thumbnailImage {
+    background-color: #fff;
+    border: 1px solid #8a3333;
+    border-radius: 3px;
+  }
+/* For instance, the highlight on the currently visible page thumbnail. */
+.thumbnail.selected .thumbnailImage {
+    outline: 2px solid #b21f2d; /* or your brand color */
+  }
+  
+  /* If you want to override link colors in the PDF text layers, be cautious with global rules. 
+     PDF.js text might contain links that appear in #333 or #00f by default. */
+  .textLayer .linkAnnotation {
+    color: #007bff; /* brand link color, or a highlight color */
+  }
+  
+  /* Loading bar. By default it's a blue-ish. */
+  .progress {
+    background: linear-gradient(to right, green 0%, lightgreen 100%);
+  }
+          
+  /* Make all SVG icons in the toolbar white */
+#toolbarContainer .toolbarButton svg,
+
+/* If the icons appear as font-based or via pseudo-elements,
+   you may also need something like: */
+#toolbarContainer .toolbarButton::before {
+  background-color: #ffffff;
+}
+/* In your pdfjs-custom.css loaded by viewer.html after viewer.css */
