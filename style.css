@@ -436,11 +436,3 @@
     scroll-behavior: smooth; /* Sorgt für weiches Scrollen */
   }
   
-  body {
-    scroll-padding-top: 800px; /* Höhe deines Sticky Headers anpassen */
-  }
-  section[termine] {
-    scroll-margin-top: 80px;
-  }
-
-
