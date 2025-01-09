@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <title>Spielorte – Reizende Runde</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../Mitgliederbereich/style.css">
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 16px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4b41a;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .filter-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .filter-container select, .filter-container input {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    #noResultsMessage {
+      display: none;
+      text-align: center;
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="../" class="logo">Reizende Runde</a>
+    <nav>
+      <ul>
+        <li><a href="../#about">Über uns</a></li>
+        <li><a href="../#aktuelles">Aktuelles</a></li>
+        <li><a href="../#termine">Termine</a></li>
+        <li><a href="../#mitglied">Mitglied werden</a></li>
+        <li><a href="../#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+    <div class="header-right">
+      <div class="member-area">
+        <a href="../Mitgliederbereich/" class="member-btn">
+          <i class="fas fa-user-lock"></i> Mitgliederbereich
+        </a>
+      </div>
+      <div class="hamburger"><i class="fas fa-bars"></i></div>
+    </div>
+  </header>
+
+  <!-- SIMPLE BANNER -->
+  <section class="simple-banner">
+    <h1>Liste von Spielorten</h1>
+    <p>Gesammelte Cafés, Kneipen, Bars etc. in Berlin <br> 
+        die sich mehr oder weniger zum Skat spielen eignen.</p>
+  </section>
+
+  <!-- MAIN CONTENT -->
+  <main style="padding: 2rem 1rem;">
+    <section style="max-width: 1000px; margin: 0 auto;">
+      <h2 style="text-align:center;">Spielorte</h2>
+      <p style="text-align:center; margin-bottom:2rem;">
+        Such, filter oder stöber nach Spielorten.
+      </p>
+      <div class="filter-container">
+        <select id="columnSelector">
+          <option value="all">Alle Spalten</option>
+        </select>
+        <input type="text" id="filterInput" placeholder="Suchbegriff eingeben...">
+      </div>
+      <table id="dataTable">
+        <thead>
+          <tr id="tableHeaders">
+            <!-- Headers will be dynamically inserted -->
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Data will be dynamically inserted -->
+        </tbody>
+      </table>
+      <p id="noResultsMessage">Keine Ergebnisse gefunden.</p>
+
+      <script>
+        // URL of the published Google Sheet
+        const googleSheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGFAymdV00LZFi09qBg6j5smzX07s9YWplUmwwkvu5h6sn3VdzzLMUg07t3kqh5TKHrgAjWDR_DkcK/pubhtml?gid=0&single=true";
+
+        // Fetch the Google Sheet data
+        async function fetchGoogleSheet() {
+          const response = await fetch(googleSheetUrl);
+          const text = await response.text();
+
+          // Parse the response to extract the table
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(text, "text/html");
+          const table = doc.querySelector("table");
+
+          if (table) {
+            populateCustomTable(table);
+          } else {
+            console.error("Failed to retrieve the table from the Google Sheet.");
+          }
+        }
+
+        // Populate the custom table with the Google Sheet data
+        function populateCustomTable(sheetTable) {
+          const tableHeaders = document.getElementById("tableHeaders");
+          const tableBody = document.getElementById("tableBody");
+          const columnSelector = document.getElementById("columnSelector");
+
+          // Clear existing data
+          tableHeaders.innerHTML = "";
+          tableBody.innerHTML = "";
+          columnSelector.innerHTML = '<option value="all">Alle Spalten</option>'; // Reset dropdown
+
+          // Extract headers from the first row
+          let headers = sheetTable.querySelectorAll("tbody tr:first-child td");
+            
+          headers.forEach((header, index) => {
+            const th = document.createElement("th");
+            th.textContent = header.textContent;
+            tableHeaders.appendChild(th);
+
+            // Populate dropdown with column names
+            const option = document.createElement("option");
+            option.value = index; // Use column index as value
+            option.textContent = header.textContent;
+            columnSelector.appendChild(option);
+          });
+
+          // Extract rows from the body
+          const rows = sheetTable.querySelectorAll("tbody tr");
+          rows.forEach(row => {
+            const tr = document.createElement("tr");
+            const cells = row.querySelectorAll("td");
+            cells.forEach(cell => {
+              const td = document.createElement("td");
+              td.textContent = cell.textContent;
+              tr.appendChild(td);
+            });
+            tableBody.appendChild(tr);
+          });
+
+          // Initialize the filter functionality
+          initializeFilter();
+        }
+
+        // Add filter functionality
+        function initializeFilter() {
+          const filterInput = document.getElementById("filterInput");
+          const tableBody = document.getElementById("tableBody");
+          const columnSelector = document.getElementById("columnSelector");
+          const noResultsMessage = document.getElementById("noResultsMessage");
+
+          filterInput.addEventListener("input", () => {
+            const filterValue = filterInput.value.toLowerCase().trim();
+            const selectedColumn = columnSelector.value; // Get selected column index
+            const rows = tableBody.querySelectorAll("tr");
+            let visibleRowCount = 0;
+
+            rows.forEach(row => {
+              const cells = row.querySelectorAll("td");
+
+              // If "all" is selected, search in all columns
+              if (selectedColumn === "all") {
+                const rowText = Array.from(cells)
+                  .map(cell => (cell.textContent || "").toLowerCase())
+                  .join(" ");
+                if (rowText.includes(filterValue)) {
+                  row.style.display = "";
+                  visibleRowCount++;
+                } else {
+                  row.style.display = "none";
+                }
+              } else {
+                // Search in the specific column
+                const cellText = (cells[selectedColumn]?.textContent || "").toLowerCase();
+                if (cellText.includes(filterValue)) {
+                  row.style.display = "";
+                  visibleRowCount++;
+                } else {
+                  row.style.display = "none";
+                }
+              }
+            });
+
+            // Show or hide the "No results" message
+            noResultsMessage.style.display = visibleRowCount === 0 ? "block" : "none";
+          });
+        }
+
+        // Fetch and display the Google Sheet data
+        fetchGoogleSheet();
+      </script>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Kontakt</h4>
+        <ul>
+          <li>Skatverein Reizende Runde e.V.</li>
+          <li>Reizstraße 13</li>
+          <li>12345 Kartenstadt</li>
+          <li>Tel: +49 (0)123 456789</li>
+          <li><a href="mailto:info@reizende-runde.de">info@reizende-runde.de</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Menü</h4>
+        <ul>
+          <li><a href="../#about">Über uns</a></li>
+          <li><a href="../#aktuelles">Aktuelles</a></li>
+          <li><a href="../#termine">Termine</a></li>
+          <li><a href="../#mitglied">Mitglied werden</a></li>
+          <li><a href="../#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Folge uns</h4>
+        <ul>
+          <li>
+            <a 
+              href="https://www.instagram.com/reizenderunde" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              <i class="fab fa-instagram-square"></i> Instagram
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Reizende Runde e.V. – Alle Rechte vorbehalten.
+    </div>
+  </footer>
+
+</body>
+</html>
