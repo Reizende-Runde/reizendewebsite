@@ -1,0 +1,139 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+    overflow-x: auto; /* Make table horizontally scrollable */
+    display: block; /* Ensure the table is block-level for scrolling */
+  }
+
+  th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    max-width: 200px; /* Fixed size for cells */
+  }
+
+  th {
+    background-color: #b21f2d; /* Vereinsfarbe */
+    color: white;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  .filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .filter-container select, .filter-container input {
+    padding: 8px;
+    font-size: 16px;
+  }
+
+  #noResultsMessage {
+    display: none;
+    text-align: center;
+    color: red;
+    margin-top: 10px;
+  }
+
+  .table-wrapper {
+    overflow-x: auto; /* Make the wrapper horizontally scrollable */
+    margin: 0 auto; /* Center the table */
+    max-width: 1000px; /* Set a max width for the table */
+  }
+
+  .expanded {
+    white-space: normal /* Allow text to wrap */ !important;
+    overflow: visible !important; /* Show overflow text */
+    text-overflow: clip !important; /* Remove ellipsis */
+    max-width: none !important; /* Remove fixed size */
+    box-sizing: content-box !important; /* Prevent the border from increasing the row size */
+  }
+
+  .column-selector {
+display: flex;
+flex-wrap: wrap;
+gap: 5px; /* Smaller spacing between items */
+}
+
+.checkbox-label {
+display: flex;
+align-items: center;
+gap: 3px;
+font-size: 12px; /* Smaller font size */
+cursor: pointer;
+padding: 2px 6px;
+background-color: #f9f9f9;
+border: 1px solid #ddd; /* Minimal border for visibility */
+border-radius: 3px;
+transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.checkbox-label:hover {
+background-color: #f1f1f1;
+border-color: #bbb;
+}
+
+.checkbox-label input[type="checkbox"] {
+display: none; /* Hide the default checkbox */
+}
+
+.checkbox-label .checkbox-custom {
+font-weight: 500; /* Less bold */
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+background-color: #b21f2d;
+color: white;
+border-radius: 3px;
+padding: 2px 5px;
+}
+
+/* Add hover effect to rows */
+#dataTable tbody tr {
+cursor: pointer; /* Show pointer cursor to indicate interactivity */
+transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+#dataTable tbody tr:hover {
+background-color: #f1f1f1; /* Subtle background change on hover */
+}
+
+/* Highlight the expanded row */
+#dataTable tbody tr.expanded {
+background-color: #ffe5e5; /* Highlight to show it's expanded */
+border-left: 4px solid #b21f2d; /* Visual emphasis */
+}
+
+#dataTable tbody tr.expanded td{
+    white-space: normal /* Allow text to wrap */ !important;
+    overflow: visible !important; /* Show overflow text */
+    }
+
+.small-font {
+  font-size: 13px; /* Decrease font size by 2 points */
+}
+.map-button {
+    padding: 5px 10px;
+    background-color: #b21f2d;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    display: inline-block;
+  }
+  
+  .map-button:hover {
+    background-color: #a11b29;
+  }
+  
+  
