@@ -14,6 +14,10 @@
     rel="stylesheet"
   >
 
+    <!-- Leaflet.js Library -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="../Mitgliederbereich/style.css">
   <link rel="stylesheet" href="../style.css">
@@ -56,6 +60,8 @@
       <p style="text-align:center; margin-bottom:2rem;">
         Suche, filtere oder stöbere nach Spielorten.
       </p>
+      <button class="show-map-btn" id="showMapButton">Karte aller Ergebnisse</button>
+
       <div class="filter-container">
         <div class="column-selector" id="columnSelector">
           <!-- Checkboxes will be dynamically inserted -->
@@ -76,12 +82,63 @@
       </div>
       <p id="noResultsMessage">Keine Ergebnisse gefunden.</p>
 
+      <div id="mapPopup" style="display: none;">
+        <button class="close-btn" id="closeMapPopup">&times;</button>
+        <div class="map-container" id="map" style="height: 400px;"></div>
+    </div>
+
+
       <script>
         // URL of the published Google Sheet
         const googleSheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGFAymdV00LZFi09qBg6j5smzX07s9YWplUmwwkvu5h6sn3VdzzLMUg07t3kqh5TKHrgAjWDR_DkcK/pubhtml?gid=0&single=true";
 
         // Default columns to display
         const defaultColumns = ["Name", "Gegend", "Pro", "Kontra", "Bierpreis 0,4l", "Bierpreis 0,5l", "Bewertung (0-10)", "Raucherkneipe?"];
+       
+ // Map variables
+let map;
+const markers = [];
+
+// Initialize Leaflet Map
+document.addEventListener("DOMContentLoaded", () => {
+  map = L.map("map").setView([52.52, 13.405], 12); // Default center (Berlin)
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+});
+
+// Show Map Button Functionality
+document.getElementById("showMapButton").addEventListener("click", () => {
+    const visibleRows = document.querySelectorAll("#dataTable tbody tr:not([style*='display: none'])");
+    const bounds = L.latLngBounds();
+
+    markers.forEach(marker => map.removeLayer(marker));
+    markers.length = 0;
+
+    visibleRows.forEach(row => {
+        const longitude = row.getAttribute("data-longitude");
+        const latitude = row.getAttribute("data-latitude");
+        const name = row.getAttribute("data-name");
+
+        if (longitude && latitude) {
+            const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(name);
+            markers.push(marker);
+            bounds.extend(marker.getLatLng());
+        }
+    });
+
+    // Fit map to bounds only if markers exist
+    if (markers.length > 0) {
+        map.fitBounds(bounds, { padding: [20, 20] }); // Add padding to avoid edge-cutting
+    }
+  // Show the map popup
+  document.getElementById("mapPopup").style.display = "block";
+});
+
+// Close Map Popup
+document.getElementById("closeMapPopup").addEventListener("click", () => {
+  document.getElementById("mapPopup").style.display = "none";
+});
 
         // Fetch the Google Sheet data
         async function fetchGoogleSheet() {
