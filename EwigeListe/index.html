@@ -8,9 +8,12 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <!-- Google Font -->
+  
+  <!-- TODO: ins frontend runterladen und googlelink entfernen-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- TODO: ins frontend runterladen und googlelink entfernen-->
   <link 
     href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
     rel="stylesheet"
@@ -22,6 +25,7 @@
 <body>
 
   <!-- HEADER -->
+  <!-- TODO: Alles was geht dynamisch ausm Backend laden, z.b Titel, "Mitgliederbereich"--> 
   <header>
     <a href="../" class="logo">Reizende Runde</a>
     <nav>
@@ -43,13 +47,13 @@
     </div>
   </header>
 
-  <!-- SIMPLE BANNER -->
+  <!-- SIMPLE BANNER TODO: dynamisch laden-->
   <section class="simple-banner">
     <h1>Ewige Liste</h1>
     <p>Deine Übersichts-Tabelle mit allen gesammelten Daten</p>
   </section>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT, TODO: Titel und Texte dynamisch laden-->
   <main style="padding: 2rem 1rem;">
     <section style="max-width: 1200px; margin: 0 auto;">
       <h2 style="text-align:center;">Listen-Übersicht</h2>
@@ -64,7 +68,7 @@
         an.
       </p>
 
-      <!-- NOTE FOR MOBILE ONLY (Hidden by default) -->
+      <!-- NOTE FOR MOBILE ONLY (Hidden by default) TODO: Text dynamisch laden -->
       <p 
         id="mobileNote" 
         style="
@@ -97,6 +101,7 @@
   </main>
 
   <!-- FOOTER -->
+  <!-- TODO: Footer Inhalte dynamisch ausm Backend laden-->
   <footer>
     <div class="footer-content">
       <div class="footer-section">
@@ -151,10 +156,10 @@
       const user = auth.currentUser;
 
       if (!user) {
-        //window.location.href = "../index.html";
-        //return;
+        window.location.href = "../index.html";
+        return;
       }
-
+        //TODO: Fehlermeldungen überarbeiten 
       try {
         const doc = await db.collection("protectedContent").doc("EwigeListe").get();
         if (doc.exists) {
@@ -182,7 +187,7 @@
       if (user) {
         fetchProtectedContent();
       } else {
-       // window.location.href = "../index.html";
+       window.location.href = "../index.html";
       }
     });
   </script>
