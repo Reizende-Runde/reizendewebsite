@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex">
   <title>Ewige Liste – Reizende Runde</title>
 
-  <!-- Google Font -->
+  <!-- TODO: runterladen, hardcoden, und links entfernen -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link 
@@ -14,12 +14,7 @@
     rel="stylesheet"
   >
 
-  <!-- (Optional) PDF.js default viewer styles if you want to load them in the parent page 
-       Usually you just open `web/viewer.html` as a separate page or in an iframe. 
-  -->
-
   <!-- Your existing CSS -->
-
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="../Mitgliederbereich/style.css">
   <link rel="stylesheet" href="../style.css">
@@ -27,9 +22,9 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- HEADER TODO: alles was Sinn macht dynamisch ausm Backend laden-->
   <header>
-    <a href="../" class="logo">Reizende Runde</a>
+    <a href=".." class="logo">Reizende Runde</a>
     <nav>
       <ul>
         <li><a href="../#about">Über uns</a></li>
@@ -41,7 +36,7 @@
     </nav>
     <div class="header-right">
       <div class="member-area">
-        <a href="../Mitgliederbereich/" class="member-btn">
+        <a href="../Mitgliederbereich" class="member-btn">
           <i class="fas fa-user-lock"></i> Mitgliederbereich
         </a>
       </div>
@@ -49,13 +44,13 @@
     </div>
   </header>
 
-  <!-- SIMPLE BANNER -->
+  <!-- SIMPLE BANNER, TODO: Inhalte dynamisch ausm Backend laden-->
   <section class="simple-banner">
     <h1>Internationale Skatordnung</h1>
     <p>Entnommen der offiziellen Website des Deutschen Skatverbands, DSKV, dskv.de</p>
   </section>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT , TODO: Inhalte dynamisch ausm Backend laden-->
   <main style="padding: 2rem 1rem;">
     <section style="max-width: 1000px; margin: 0 auto;">
       <h2 style="text-align:center;">ISkO von 2022</h2>
@@ -63,7 +58,7 @@
         Suche beispielsweise nach Stichworten.
       </p>
       
-      <!-- NOTE FOR MOBILE ONLY (Hidden by default) -->
+      <!-- NOTE FOR MOBILE ONLY (Hidden by default), TODO: Inhalte dynamisch ausm Backend laden -->
       <p 
         id="mobileNote" 
         style="
@@ -77,7 +72,8 @@
         gerne auch in einer separaten App öffnen.
       </p>
 
-      <!-- PDF.js EMBED (Using the default viewer in an iframe) -->
+      <!-- PDF.js EMBED (Using the default viewer in an iframe) #TODO: ist es schlimm,
+       dass der link unten visible und accesible ist?-->
       <div style="width: 100%; height: 1400px; border: 0px solid #ccc;">
         <!-- The "file" parameter in the query string should be URL-encoded if needed -->
         <iframe 
@@ -89,7 +85,7 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
+  <!-- FOOTER, TODO: Inhalte dynamisch ausm Backend laden -->
   <footer>
     <div class="footer-content">
       <div class="footer-section">
