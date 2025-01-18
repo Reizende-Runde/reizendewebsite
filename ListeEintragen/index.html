@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
   <title>Listen Eintragen – Reizende Runde</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <!-- Google Fonts -->
   <!-- TODO: runterladen, hardcoden, und links entfernen -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,13 +60,14 @@
     <section style="max-width: 800px; margin: 0 auto;">
       <h2 style="text-align:center;">Füll das Formular aus und schick es ab.</h2>
       <p style="text-align:center; margin-bottom:2rem;">
-        Danach werden die Ergbnisse in der Ewigen Liste sichtbar sein.
+        Danach werden die Ergebnisse in der Ewigen Liste sichtbar sein.
       </p>
 
       <!-- Google Form embed, TODO: Inhalte dynamisch ausm Backend laden-->
       <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
         <iframe 
-          src="https://forms.gle/KVezopaQeAR9yUu36" 
+          id = "iframeForm"
+          src="" 
           style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" 
           frameborder="0" 
           marginheight="0" 
@@ -109,4 +114,57 @@
     </div>
   </footer>
 </body>
+
+<script>
+  //Firebase project configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXnqylIvad60Aukj3DVNLoV-loRmZMd0g",
+    authDomain: "reizendesbackend.firebaseapp.com",
+    projectId: "reizendesbackend",
+    storageBucket: "reizendesbackend.firebasestorage.app",
+    messagingSenderId: "239229132288",
+    appId: "1:239229132288:web:a398a64dba3fb0c7fac2e5"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  async function fetchProtectedContent() {
+    const user = auth.currentUser;
+
+    if (!user) {
+      window.location.href = "../index.html";
+      return;
+    }
+      //TODO: Fehlermeldungen überarbeiten 
+    try {
+      const doc = await db.collection("protectedContent").doc("ListeEintragen").get();
+      if (doc.exists) {
+        const data = doc.data();
+        console.log("Retrieved data:", data);
+
+        // Update the content with Firestore data
+        document.getElementById("iframeForm").src = data.FormsLink;
+      } else {
+        throw new Error("Kein Inhalt gefunden");
+      }
+    } catch (error) {
+      console.error("Fehler beim Laden der Inhalte:", error);
+      document.getElementById("loadingMessage").textContent =
+        "Fehler beim Laden der Inhalte. Bitte versuche es später erneut.";
+    }
+  }
+
+  // Check authentication state
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      fetchProtectedContent();
+    } else {
+     window.location.href = "../index.html";
+    }
+  });
+</script>
+
 </html>
