@@ -5,26 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
   <title>Listen Eintragen – Reizende Runde</title>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
   <!-- Google Fonts -->
+  <!-- TODO: runterladen, hardcoden, und links entfernen -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link 
     href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
     rel="stylesheet"
   >
-  <!-- FontAwesodme (if needed) -->
-  <!-- <link rel="stylesheet" 
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
-  integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" 
-  crossorigin="anonymous"> -->
-
+ 
   <!-- Same CSS as your landing page -->
   <link rel="stylesheet" href="../style.css">
-  <link rel="stylesheet" href="../Mitgliederbereich/style.css">  <!--//if needed-->
+  <link rel="stylesheet" href="../Mitgliederbereich/style.css">
 </head>
 <body>
 
-  <!-- HEADER (copied from membership page/landing page) -->
+  <!-- HEADER, TODO: Inhalte dynamisch ausm Backend laden -->
   <header>
     <a href="../index.html" class="logo">Reizende Runde</a>
     
@@ -41,8 +41,7 @@
 
     <div class="header-right">
       <div class="member-area">
-        <!-- If you'd like a back link to the members page, adjust below -->
-        <a href="../Mitgliederbereich/" class="member-btn">
+        <a href="../Mitgliederbereich" class="member-btn">
           <i class="fas fa-user-lock"></i> Mitgliederbereich
         </a>
       </div>
@@ -50,24 +49,25 @@
     </div>
   </header>
 
-  <!-- SIMPLE BANNER -->
+  <!-- SIMPLE BANNER, TODO: Inhalte dynamisch ausm Backend laden -->
   <section class="simple-banner">
     <h1>Listen Eintragen</h1>
     <p>Unser Formular zum einfachen Eintragen von Listen in die Ewige Liste</p>
   </section>
 
-  <!-- MAIN CONTENT: embed Google Form -->
+  <!-- MAIN CONTENT: embed Google Form, TODO: Inhalte dynamisch ausm Backend laden -->
   <main style="padding: 2rem 1rem;">
     <section style="max-width: 800px; margin: 0 auto;">
       <h2 style="text-align:center;">Füll das Formular aus und schick es ab.</h2>
       <p style="text-align:center; margin-bottom:2rem;">
-        Danach werden die Ergbnisse in der Ewigen Liste sichtbar sein.
+        Danach werden die Ergebnisse in der Ewigen Liste sichtbar sein.
       </p>
 
-      <!-- Google Form embed - replace src with your form's share URL -->
+      <!-- Google Form embed, TODO: Inhalte dynamisch ausm Backend laden-->
       <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
         <iframe 
-          src="https://forms.gle/KVezopaQeAR9yUu36" 
+          id = "iframeForm"
+          src="" 
           style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;" 
           frameborder="0" 
           marginheight="0" 
@@ -80,17 +80,16 @@
     </section>
   </main>
 
-  <!-- FOOTER (copied from membership page/landing page) -->
+  <!-- FOOTER, TODO: Inhalte dynamisch ausm Backend laden-->
   <footer>
     <div class="footer-content">
       <div class="footer-section">
         <h4>Kontakt</h4>
         <ul>
-          <li>Skatverein Reizende Runde e.V.</li>
-          <li>Reizstraße 13</li>
-          <li>12345 Kartenstadt</li>
-          <li>Tel: +49 (0)123 456789</li>
-          <li><a href="mailto:info@reizende-runde.de">info@reizende-runde.de</a></li>
+          <li>Skatverein Reizende Runde</li>
+          <li>Köpenicker Landstraße 254</li>
+          <li>12437 Berlin</li>
+          <li><a href="mailto:info&#64;reizenderunde.de">info&#64;reizenderunde.de</a></li>
         </ul>
       </div>
       <div class="footer-section">
@@ -111,8 +110,61 @@
       </div>
     </div>
     <div class="footer-bottom">
-      © 2024 Reizende Runde e.V. – Alle Rechte vorbehalten.
+      © 2025 Reizende Runde – Alle Rechte vorbehalten.
     </div>
   </footer>
 </body>
+
+<script>
+  //Firebase project configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyAXnqylIvad60Aukj3DVNLoV-loRmZMd0g",
+    authDomain: "reizendesbackend.firebaseapp.com",
+    projectId: "reizendesbackend",
+    storageBucket: "reizendesbackend.firebasestorage.app",
+    messagingSenderId: "239229132288",
+    appId: "1:239229132288:web:a398a64dba3fb0c7fac2e5"
+  };
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  async function fetchProtectedContent() {
+    const user = auth.currentUser;
+
+    if (!user) {
+      window.location.href = "../index.html";
+      return;
+    }
+      //TODO: Fehlermeldungen überarbeiten 
+    try {
+      const doc = await db.collection("protectedContent").doc("ListeEintragen").get();
+      if (doc.exists) {
+        const data = doc.data();
+        console.log("Retrieved data:", data);
+
+        // Update the content with Firestore data
+        document.getElementById("iframeForm").src = data.FormsLink;
+      } else {
+        throw new Error("Kein Inhalt gefunden");
+      }
+    } catch (error) {
+      console.error("Fehler beim Laden der Inhalte:", error);
+      document.getElementById("loadingMessage").textContent =
+        "Fehler beim Laden der Inhalte. Bitte versuche es später erneut.";
+    }
+  }
+
+  // Check authentication state
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      fetchProtectedContent();
+    } else {
+     window.location.href = "../index.html";
+    }
+  });
+</script>
+
 </html>

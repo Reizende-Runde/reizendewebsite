@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
   <title>Ewige Liste – Reizende Runde</title>
-  <!-- Google Font -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  
+  <!-- TODO: ins frontend runterladen und googlelink entfernen-->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  
+  <!-- TODO: ins frontend runterladen und googlelink entfernen-->
   <link 
     href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
     rel="stylesheet"
   >
-  <!-- FontAwesome -->
-  <!-- <link rel="stylesheet" 
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
-  integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" 
-  crossorigin="anonymous"> -->
-
   <!-- Your existing CSS -->
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../Mitgliederbereich/style.css">
@@ -25,6 +25,7 @@
 <body>
 
   <!-- HEADER -->
+  <!-- TODO: Alles was geht dynamisch ausm Backend laden, z.b Titel, "Mitgliederbereich"--> 
   <header>
     <a href="../" class="logo">Reizende Runde</a>
     <nav>
@@ -46,30 +47,28 @@
     </div>
   </header>
 
-  <!-- SIMPLE BANNER -->
+  <!-- SIMPLE BANNER TODO: dynamisch laden-->
   <section class="simple-banner">
     <h1>Ewige Liste</h1>
     <p>Deine Übersichts-Tabelle mit allen gesammelten Daten</p>
   </section>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN CONTENT, TODO: Titel und Texte dynamisch laden-->
   <main style="padding: 2rem 1rem;">
     <section style="max-width: 1200px; margin: 0 auto;">
       <h2 style="text-align:center;">Listen-Übersicht</h2>
+      <p id="loadingMessage" style="text-align:center; margin-bottom:2rem;">Lade Daten...</p>
       <p style="text-align:center; margin-bottom:2rem;">
         Die untenstehende Tabelle zeigt die Einträge der 
         <span style="color: green; font-weight: bold; text-decoration: underline;">
-            <a href="https://docs.google.com/spreadsheets/d/1VAsRsZ_bey4abot-ZIm1VZz8FrqYhZIIiNDRc0Bm0_M/edit?gid=883633028#gid=883633028"
-            target="_blank">
-                
-                Ewigen Liste↗
-            </a>
+          <a id="sheetLink" href="" target="_blank" rel="noopener noreferrer">
+            Ewigen Liste↗
+          </a>
         </span> 
         an.
       </p>
-      
-      
-      <!-- NOTE FOR MOBILE ONLY (Hidden by default) -->
+
+      <!-- NOTE FOR MOBILE ONLY (Hidden by default) TODO: Text dynamisch laden -->
       <p 
         id="mobileNote" 
         style="
@@ -80,11 +79,8 @@
         "
       >
         Hinweis: Für eine bessere Benutzererfahrung klicke bitte
-        <a 
-          href="https://docs.google.com/spreadsheets/d/1VAsRsZ_bey4abot-ZIm1VZz8FrqYhZIIiNDRc0Bm0_M/edit?gid=883633028#gid=883633028"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        
+        <a id="mobileSheetLink" href="" target="_blank" rel="noopener noreferrer">
           HIER
         </a>
         um die Tabelle separat, bestenfalls in der Google Sheets App, zu öffnen.
@@ -99,28 +95,22 @@
           zoom: 150%;
         "
       >
-        <iframe 
-          src="https://docs.google.com/spreadsheets/d/1VAsRsZ_bey4abot-ZIm1VZz8FrqYhZIIiNDRc0Bm0_M/edit?usp=sharing"
-          style="width:100%; height:800px; border:0;"
-          frameborder="0"
-          scrolling="auto"
-        >
-        </iframe>
+        <iframe id="embeddedSheet" src="" style="width:100%; height:800px; border:0;" frameborder="0" scrolling="auto"></iframe>
       </div>
     </section>
   </main>
 
   <!-- FOOTER -->
+  <!-- TODO: Footer Inhalte dynamisch ausm Backend laden-->
   <footer>
     <div class="footer-content">
       <div class="footer-section">
         <h4>Kontakt</h4>
         <ul>
-          <li>Skatverein Reizende Runde e.V.</li>
-          <li>Reizstraße 13</li>
-          <li>12345 Kartenstadt</li>
-          <li>Tel: +49 (0)123 456789</li>
-          <li><a href="mailto:info@reizende-runde.de">info@reizende-runde.de</a></li>
+          <li>Skatverein Reizende Runde</li>
+          <li>Köpenicker Landstraße 254</li>
+          <li>12437 Berlin</li>
+          <li><a href="mailto:info&#64;reizenderunde.de">info&#64;reizenderunde.de</a></li>
         </ul>
       </div>
       <div class="footer-section">
@@ -141,17 +131,65 @@
       </div>
     </div>
     <div class="footer-bottom">
-      © 2024 Reizende Runde e.V. – Alle Rechte vorbehalten.
+      © 2025 Reizende Runde – Alle Rechte vorbehalten.
     </div>
   </footer>
 
-  <!-- SIMPLE JS: Show #mobileNote if device is mobile -->
+  <!-- Firebase Configuration and JavaScript -->
   <script>
-    // A basic test for mobile user agents
-    if (/Mobi|Android|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent)) {
-      document.getElementById('mobileNote').style.display = 'block';
-    }
-  </script>
+    //Firebase project configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAXnqylIvad60Aukj3DVNLoV-loRmZMd0g",
+      authDomain: "reizendesbackend.firebaseapp.com",
+      projectId: "reizendesbackend",
+      storageBucket: "reizendesbackend.firebasestorage.app",
+      messagingSenderId: "239229132288",
+      appId: "1:239229132288:web:a398a64dba3fb0c7fac2e5"
+    };
 
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    async function fetchProtectedContent() {
+      const user = auth.currentUser;
+
+      if (!user) {
+        window.location.href = "../index.html";
+        return;
+      }
+        //TODO: Fehlermeldungen überarbeiten 
+      try {
+        const doc = await db.collection("protectedContent").doc("EwigeListe").get();
+        if (doc.exists) {
+          const data = doc.data();
+          console.log("Retrieved data:", data);
+
+          // Update the content with Firestore data
+          document.getElementById("sheetLink").href = data.sheetURL;
+          document.getElementById("mobileSheetLink").href = data.sheetURL;
+          document.getElementById("embeddedSheet").src = data.iFrameSource;
+
+          document.getElementById("loadingMessage").style.display = "none";
+        } else {
+          throw new Error("Kein Inhalt gefunden");
+        }
+      } catch (error) {
+        console.error("Fehler beim Laden der Inhalte:", error);
+        document.getElementById("loadingMessage").textContent =
+          "Fehler beim Laden der Inhalte. Bitte versuche es später erneut.";
+      }
+    }
+
+    // Check authentication state
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        fetchProtectedContent();
+      } else {
+       window.location.href = "../index.html";
+      }
+    });
+  </script>
 </body>
 </html>

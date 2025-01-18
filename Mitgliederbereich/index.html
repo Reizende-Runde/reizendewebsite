@@ -5,33 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex">
   <title>Mitgliederbereich – Reizende Runde</title>
+
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <!-- Firebase Authentication -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   
   <!-- Googles Fonts -->
+  <!-- TODO: runterladen, hardcoden, und links entfernen -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link 
     href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
     rel="stylesheet"
   >
-  <!-- FontAwesome (if needed) -->
-   <link rel="stylesheet" 
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" 
-  integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" 
-  crossorigin="anonymous">
-
+  
   <!-- Link to your external CSS -->
   <link rel="stylesheet" href="../style.css">
-
-  <!-- Optional inline styling for the banner -->
-  
   <link rel="stylesheet" href="style.css">  
 </head>
 <body>
 
-  <!-- HEADER (same as landing page) -->
+  <!-- HEADER, TODO: Inhalte dynamisch ausm Backend laden -->
   <header>
     <a href=".." class="logo">Reizende Runde</a>
     
@@ -56,13 +50,13 @@
     </div>
   </header>
 
-  <!-- SIMPLE BANNER (replacing the hero section) -->
+  <!-- SIMPLE BANNER, TODO: Inhalte dynamisch ausm Backend laden-->
   <section class="simple-banner">
     <h1>Willkommen im Mitgliederbereich</h1>
     <p>Interne Inhalte für Mitglieder der Reizenden Runde</p>
   </section>
 
-  <!-- MAIN CONTENT: Short intro + cards -->
+  <!-- MAIN CONTENT, TODO: Inhalte dynamisch ausm Backend (Database!!!) laden-->
   <main>
     <!-- Intro Section -->
     <section class="about" style="text-align:center; padding:2rem 1rem;">
@@ -79,17 +73,16 @@
     <button id="logout">Logout</button>
   </main>
 
-  <!-- FOOTER (same as landing page) -->
+  <!-- FOOTER, TODO: Inhalte dynamisch ausm Backend laden-->
   <footer>
     <div class="footer-content">
       <div class="footer-section">
         <h4>Kontakt</h4>
         <ul>
-          <li>Skatverein Reizende Runde e.V.</li>
-          <li>Reizstraße 13</li>
-          <li>12345 Kartenstadt</li>
-          <li>Tel: +49 (0)123 456789</li>
-          <li><a href="mailto:info@reizende-runde.de">info@reizende-runde.de</a></li>
+          <li>Skatverein Reizende Runde</li>
+          <li>Köpenicker Landstraße 254</li>
+          <li>12437 Berlin</li>
+          <li><a href="mailto:info&#64;reizenderunde.de">info&#64;reizenderunde.de</a></li>
         </ul>
       </div>
       <div class="footer-section">
@@ -110,24 +103,21 @@
       </div>
     </div>
     <div class="footer-bottom">
-      © 2024 Reizende Runde e.V. – Alle Rechte vorbehalten.
+      © 2025 Reizende Runde – Alle Rechte vorbehalten.
     </div>
   </footer>
 </body>
+
+
 <script>
   // Replace with your Firebase project configuration
   const firebaseConfig = {
 
     apiKey: "AIzaSyAXnqylIvad60Aukj3DVNLoV-loRmZMd0g",
-
     authDomain: "reizendesbackend.firebaseapp.com",
-
     projectId: "reizendesbackend",
-
     storageBucket: "reizendesbackend.firebasestorage.app",
-
     messagingSenderId: "239229132288",
-
     appId: "1:239229132288:web:a398a64dba3fb0c7fac2e5"
 
     };
@@ -142,7 +132,7 @@
     const idToken = sessionStorage.getItem('idToken');
     if (!idToken) {
       // No token, redirect to login
-      window.location.href = '../index.html';
+      window.location.href = '..';
       return;
     }
 
@@ -155,7 +145,7 @@
         },
         body: JSON.stringify({}) // Add any necessary data
       });
-
+      //TODO: Fehlermeldungen updaten
       if (response.ok) {
       const data = await response.json();
       const htmlContent = data.htmlContent;
@@ -168,7 +158,7 @@
       document.getElementById('error').textContent = 'Access denied. Please log in again.';
       // Optionally, redirect to login
       setTimeout(() => {
-        window.location.href = '../index.html';
+        window.location.href = '..';
       }, 3000);
     }
   }
@@ -179,17 +169,19 @@
       if (user) {
         fetchProtectedContent();
       } else {
-        window.location.href = '../index.html';
+        window.location.href = '..';
       }
     });
   };
 
-  // Logout functionality
+  // Logout functionality TODO: Muss immer accesible sein um fehlerhafte TOkesn loszuwerden
+  // Also insbesondere auch wenn man nicht eingeloggt ist
+  // TODO: Fehlermeldung aktualisieren
   document.getElementById('logout').addEventListener('click', async () => {
     try {
       await auth.signOut();
       sessionStorage.removeItem('idToken');
-      window.location.href = '../index.html';
+      window.location.href = '..';
     } catch (error) {
       console.error('Error signing out:', error);
     }
