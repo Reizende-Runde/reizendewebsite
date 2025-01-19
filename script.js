@@ -27,17 +27,21 @@
 
   // Öffne das Modal beim Klicken auf den "Mitgliederbereich"-Button
   openModalBtn.addEventListener('click', (e) => {
-    e.preventDefault(); // Verhindert das Standardverhalten des Links
-    
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          // User is not authenticated; redirect to login page
-          window.location.href = '/Mitgliederbereich/';
-        } else {
-          modal.style.display = 'block';
-        }
-      });
-
+    e.preventDefault(); // Prevent default link behavior
+  
+    // Check if the user is authenticated
+    const user = auth.currentUser;
+    if (user) {
+      // User is already logged in
+      window.location.href = '/Mitgliederbereich';
+    } else {
+      // Clear tokens in case of failed login previously
+      sessionStorage.clear(); // Clears sessionStorage
+      auth.signOut(); // Ensures no lingering Firebase auth state
+  
+      // Display the login modal
+      modal.style.display = 'block';
+    }
   });
 
   // Schließe das Modal beim Klicken auf das "X"
@@ -72,7 +76,7 @@
       // Schließen Sie das Modal
       modal.style.display = 'none';
       // Zur geschützten Seite weiterleiten
-      window.location.href = '/Mitgliederbereich/index.html';
+      window.location.href = '/Mitgliederbereich';
     } catch (error) {
       console.error('Fehler beim Anmelden:', error);
       errorDiv.textContent = error.message;
