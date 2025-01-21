@@ -14,13 +14,17 @@
     rel="stylesheet"
   >
 
-    <!-- Leaflet.js Library -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet.js Library CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="../Mitgliederbereich/style.css">
-  <link rel="stylesheet" href="../style.css">
+  <!-- Your custom CSS -->
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="../Mitgliederbereich/style.css" />
+  <link rel="stylesheet" href="style.css" />
+
+
+  <!-- Leaflet.js Library JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -50,318 +54,45 @@
   <section class="simple-banner">
     <h1>Liste von Spielorten</h1>
     <p>Gesammelte Cafés, Kneipen, Bars etc. in Berlin <br> 
-        die sich mehr oder weniger zum Skat spielen eignen.</p>
+       die sich mehr oder weniger zum Skat spielen eignen.</p>
   </section>
 
   <!-- MAIN CONTENT -->
-  <main style="padding: 2rem 1rem;">
-    <section style="max-width: 1000px; margin: 0 auto;">
+  <main>
+    <section class="content-section">
       <h2 style="text-align:center;">Spielorte</h2>
       <p style="text-align:center; margin-bottom:2rem;">
         Suche, filtere oder stöbere nach Spielorten.
       </p>
+
       <button class="show-map-btn" id="showMapButton">Karte aller Ergebnisse</button>
 
       <div class="filter-container">
         <div class="column-selector" id="columnSelector">
-          <!-- Checkboxes will be dynamically inserted -->
+          <!-- Checkboxes to show/hide columns will be inserted by JS -->
         </div>
         <input type="text" id="filterInput" placeholder="Suchbegriff eingeben...">
       </div>
+
       <div class="table-wrapper">
         <table id="dataTable">
           <thead>
             <tr id="tableHeaders">
-              <!-- Headers will be dynamically inserted -->
+              <!-- Headers will be dynamically inserted by JS -->
             </tr>
           </thead>
           <tbody id="tableBody">
-            <!-- Data will be dynamically inserted -->
+            <!-- Data will be dynamically inserted by JS -->
           </tbody>
         </table>
       </div>
       <p id="noResultsMessage">Keine Ergebnisse gefunden.</p>
 
-      <div id="mapPopup" style="display: none;">
+      <!-- MAP POPUP -->
+      <div id="mapPopup">
         <button class="close-btn" id="closeMapPopup">&times;</button>
-        <div class="map-container" id="map" style="height: 400px;"></div>
-    </div>
-
-
-      <script>
-        // URL of the published Google Sheet
-        const googleSheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGFAymdV00LZFi09qBg6j5smzX07s9YWplUmwwkvu5h6sn3VdzzLMUg07t3kqh5TKHrgAjWDR_DkcK/pubhtml?gid=0&single=true";
-
-        // Default columns to display
-        const defaultColumns = ["Name", "Gegend", "Pro", "Kontra", "Bierpreis 0,4l", "Bierpreis 0,5l", "Bewertung (0-10)", "Raucherkneipe?"];
-       
- // Map variables
-let map;
-const markers = [];
-
-// Initialize Leaflet Map
-document.addEventListener("DOMContentLoaded", () => {
-  map = L.map("map").setView([52.52, 13.405], 12); // Default center (Berlin)
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
-});
-
-// Show Map Button Functionality
-document.getElementById("showMapButton").addEventListener("click", () => {
-    const visibleRows = document.querySelectorAll("#dataTable tbody tr:not([style*='display: none'])");
-    const bounds = L.latLngBounds();
-
-    markers.forEach(marker => map.removeLayer(marker));
-    markers.length = 0;
-
-    visibleRows.forEach(row => {
-        const longitude = row.getAttribute("data-longitude");
-        const latitude = row.getAttribute("data-latitude");
-        const name = row.getAttribute("data-name");
-
-        if (longitude && latitude) {
-            const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(name);
-            markers.push(marker);
-            bounds.extend(marker.getLatLng());
-        }
-    });
-
-    // Fit map to bounds only if markers exist
-    if (markers.length > 0) {
-        map.fitBounds(bounds, { padding: [20, 20] }); // Add padding to avoid edge-cutting
-    }
-  // Show the map popup
-  document.getElementById("mapPopup").style.display = "block";
-});
-
-// Close Map Popup
-document.getElementById("closeMapPopup").addEventListener("click", () => {
-  document.getElementById("mapPopup").style.display = "none";
-});
-
-        // Fetch the Google Sheet data
-        async function fetchGoogleSheet() {
-          const response = await fetch(googleSheetUrl);
-          const text = await response.text();
-
-          // Parse the response to extract the table
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, "text/html");
-          const table = doc.querySelector("table");
-
-          if (table) {
-            populateCustomTable(table);
-            
-          } else {
-            console.error("Failed to retrieve the table from the Google Sheet.");
-          }
-        }
-
-        // Populate the custom table with the Google Sheet data
-        function populateCustomTable(sheetTable) {
-            const tableHeaders = document.getElementById("tableHeaders");
-            const tableBody = document.getElementById("tableBody");
-            const columnSelector = document.getElementById("columnSelector");
-
-            // Clear existing data
-            tableHeaders.innerHTML = "";
-            tableBody.innerHTML = "";
-            columnSelector.innerHTML = ""; // Reset checkboxes
-
-            // Extract headers from the first row
-            let headers = sheetTable.querySelectorAll("tbody tr:first-child td");
-            let nonEmptyColumns = [];
-            let longitudeIndex = null;
-            let latitudeIndex = null;
-
-            headers.forEach((header, index) => {
-              const headerText = header.textContent.trim();
-
-              // Track longitude and latitude column indices
-              if (headerText.toLowerCase() === "longitude") longitudeIndex = index;
-              if (headerText.toLowerCase() === "latitude") latitudeIndex = index;
-
-              // Include only non-blank headers
-              if (headerText) {
-                nonEmptyColumns.push(index);
-
-                const th = document.createElement("th");
-                th.textContent = headerText;
-                tableHeaders.appendChild(th);
-
-                // Create modern styled checkbox options
-                const label = document.createElement("label");
-                label.classList.add("checkbox-label");
-
-                const checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.value = index;
-                checkbox.checked = defaultColumns.includes(headerText);
-
-                const span = document.createElement("span");
-                span.classList.add("checkbox-custom");
-                span.textContent = headerText;
-
-                label.appendChild(checkbox);
-                label.appendChild(span);
-                columnSelector.appendChild(label);
-              }
-            });
-
-            // Add a header for the map button as the first column
-            const mapHeader = document.createElement("th");
-            mapHeader.textContent = "Karte";
-            tableHeaders.prepend(mapHeader); // Prepend to make it the first column
-
-            // Extract rows from the body, skipping the first row (headers)
-            const rows = sheetTable.querySelectorAll("tbody tr:not(:first-child)");
-            rows.forEach(row => {
-              const cells = row.querySelectorAll("td");
-              const hasValidData = Array.from(cells).some(cell => cell.textContent.trim() !== "");
-
-              if (hasValidData) { // Only process rows with valid data
-                const tr = document.createElement("tr");
-                let longitude = null;
-                let latitude = null;
-
-                // Get longitude and latitude values
-                cells.forEach((cell, index) => {
-                  if (index === longitudeIndex) longitude = cell.textContent.trim();
-                  if (index === latitudeIndex) latitude = cell.textContent.trim();
-                });
-
-                // Add Google Maps button as the first cell
-                const mapCell = document.createElement("td");
-                if (longitude && latitude) {
-                  const mapButton = document.createElement("a");
-                  mapButton.href = `https://www.google.com/maps?q=${latitude},${longitude}`;
-                  mapButton.target = "_blank"; // Open in new tab
-                  mapButton.textContent = "Karte";
-                  mapButton.classList.add("map-button");
-
-                  mapCell.appendChild(mapButton);
-                } else {
-                  mapCell.textContent = "N/A";
-                  mapCell.style.color = "#aaa"; // Gray out if no coordinates
-                }
-                tr.appendChild(mapCell); // Prepend the map cell as the first cell
-
-                // Add remaining data cells
-                cells.forEach((cell, index) => {
-                  if (nonEmptyColumns.includes(index)) {
-                    const td = document.createElement("td");
-                    td.textContent = cell.textContent;
-                    tr.appendChild(td);
-                  }
-                });
-
-                tableBody.appendChild(tr);
-              }
-            });
-
-            // Add change event to column checkboxes
-            columnSelector.addEventListener("change", updateTableColumns);
-
-            // Update table columns based on initial checkbox selection
-            updateTableColumns();
-
-            // Initialize the filter functionality
-            initializeFilter();
-
-            // Add click event to expand rows
-            addRowClickEvent();
-}
-
-
-
-
-        // Add filter functionality
-        function initializeFilter() {
-          const filterInput = document.getElementById("filterInput");
-          const tableBody = document.getElementById("tableBody");
-          const columnSelector = document.getElementById("columnSelector");
-          const noResultsMessage = document.getElementById("noResultsMessage");
-
-          filterInput.addEventListener("input", () => {
-            const filterValue = filterInput.value.toLowerCase().trim();
-            const selectedColumns = Array.from(columnSelector.querySelectorAll("input:checked")).map(input => parseInt(input.value));
-            const rows = tableBody.querySelectorAll("tr");
-            let visibleRowCount = 0;
-
-            rows.forEach(row => {
-              const cells = row.querySelectorAll("td");
-              const rowText = selectedColumns.map(index => (cells[index]?.textContent || "").toLowerCase()).join(" ");
-              if (rowText.includes(filterValue)) {
-                row.style.display = "";
-                visibleRowCount++;
-              } else {
-                row.style.display = "none";
-              }
-            });
-
-            // Show or hide the "No results" message
-            noResultsMessage.style.display = visibleRowCount === 0 ? "block" : "none";
-          });
-        }
-
-        // Add click event to expand rows
-        function addRowClickEvent() {
-          const rows = document.querySelectorAll("#dataTable tbody tr"); // Select all table rows
-          rows.forEach(row => {
-            row.addEventListener("click", () => {
-              row.classList.toggle("expanded"); // Toggle the "expanded" class
-              console.log(`Row clicked. Expanded: ${row.classList.contains("expanded")}`); // Debugging output
-
-              // Check and adjust font size for expanded rows
-              const cells = row.querySelectorAll("td");
-              cells.forEach(cell => {
-                if (cell.textContent.length > 20) { // Adjust the length as needed
-                  cell.classList.add("small-font");
-                } else {
-                  cell.classList.remove("small-font");
-                }
-              });
-            });
-          });
-        }
-
-
-        // Update table columns based on selected checkboxes
-        function updateTableColumns() {
-  const columnSelector = document.getElementById("columnSelector");
-  const selectedColumns = Array.from(columnSelector.querySelectorAll("input:checked")).map(input => parseInt(input.value));
-  const tableHeaders = document.getElementById("tableHeaders").children;
-  const rows = document.querySelectorAll("#dataTable tbody tr");
-
-  // Always show the first column (map button)
-  Array.from(tableHeaders).forEach((th, index) => {
-    if (index === 0) {
-      th.style.display = ""; // Ensure the map column is visible
-    } else {
-      th.style.display = selectedColumns.includes(index - 1) ? "" : "none"; // Adjust for 0-based indices
-    }
-  });
-
-  // Show or hide table cells
-  rows.forEach(row => {
-    const cells = row.children;
-    Array.from(cells).forEach((td, index) => {
-      if (index === 0) {
-        td.style.display = ""; // Ensure the map button is always visible
-      } else {
-        td.style.display = selectedColumns.includes(index - 1) ? "" : "none"; // Adjust for 0-based indices
-      }
-    });
-
-    
-  });
-}
-
-
-        // Fetch and display the Google Sheet data
-        fetchGoogleSheet();
-      </script>
+        <div class="map-container" id="map"></div>
+      </div>
     </section>
   </main>
 
@@ -407,5 +138,7 @@ document.getElementById("closeMapPopup").addEventListener("click", () => {
     </div>
   </footer>
 
+  <!-- Your custom JS file -->
+  <script src="script.js"></script>
 </body>
 </html>
