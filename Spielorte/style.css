@@ -71,20 +71,55 @@ tr:nth-child(even) {
   font-size: 13px; /* Decrease font size slightly */
 }
 
-/* ---------- MAP BUTTON ---------- */
+/* ---------- MAP 1 BUTTON ---------- */
+.interactive-map-button {
+  padding: 5px 10px;
+  background-color: #126324;
+  color: white;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-bottom: 1rem
+}
+
+.interactive-map-button:hover {
+  background-color: #0d4f1b;
+}
+
+/* ---------- MAP 2 BUTTON ---------- */
 .map-button {
   padding: 5px 10px;
   background-color: #b21f2d;
   color: white;
-  border-radius: 4px;
-  text-decoration: none;
+  border-radius: 5px;
   font-size: 12px;
-  display: inline-block;
+  margin-bottom: 1rem
 }
 
 .map-button:hover {
   background-color: #a11b29;
 }
+
+#mapPopup {
+  display: none; /* hidden by default until the button is clicked */
+  position: relative; 
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding: 1rem;
+  /* You might use a box-shadow for emphasis */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin-bottom: 1rem;
+  margin-top: 0 !important; 
+}
+
+
+/* The map container where Leaflet draws the tiles */
+#map {
+  height: 400px;  /* or bigger if you want */
+  width: 100%;
+  border: 1px solid #ccc; /* a subtle border to match other elements */
+  margin-top: 0.5rem;
+}
+
 
 /* ---------- FILTER CONTAINER & NO RESULTS ---------- */
 .filter-container {
@@ -199,25 +234,4 @@ tr:nth-child(even) {
 }
 .filter-checkbox {
   margin-right: 6px;
-}
-
-
-/* ---------- MAP POPUP ---------- */
-#mapPopup {
-  display: none; /* hidden by default */
-  position: relative; 
-  margin-top: 20px; /* Or wherever you want it to appear */
-}
-
-#mapPopup .close-btn {
-  float: right;
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-/* The map container (height set here) */
-#map {
-  height: 400px;
 }

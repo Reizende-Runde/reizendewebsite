@@ -65,7 +65,11 @@
         Suche, filtere oder stöbere nach Spielorten.
       </p>
 
-      <button class="show-map-btn" id="showMapButton">Karte aller Ergebnisse</button>
+      <button class="interactive-map-button" id="showMapButton">Karte aller Ergebnisse</button>
+
+      <div id="mapPopup" style="display:none;">
+        <div class="map-container" id="map"></div>
+      </div>
 
       <div class="filter-container">
         <div class="column-selector" id="columnSelector">
@@ -88,11 +92,6 @@
       </div>
       <p id="noResultsMessage">Keine Ergebnisse gefunden.</p>
 
-      <!-- MAP POPUP -->
-      <div id="mapPopup">
-        <button class="close-btn" id="closeMapPopup">&times;</button>
-        <div class="map-container" id="map"></div>
-      </div>
     </section>
   </main>
 

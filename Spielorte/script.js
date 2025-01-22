@@ -6,6 +6,7 @@ const googleSheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRGFAymd
 // Default columns to display by name
 const defaultColumns = [
   "Name",
+  "Art",
   "Gegend",
   "Pro",
   "Kontra",
@@ -47,10 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const showMapButton = document.getElementById("showMapButton");
   showMapButton.addEventListener("click", handleShowMap);
 
-  const closeMapPopup = document.getElementById("closeMapPopup");
-  closeMapPopup.addEventListener("click", () => {
-    document.getElementById("mapPopup").style.display = "none";
-  });
+  
 });
 
 
@@ -387,6 +385,7 @@ function applyAllFilters() {
     }
   });
   noResultsMessage.style.display = (visibleRowCount === 0) ? "block" : "none";
+  updateMapMarkers();
 }
 
 
@@ -418,6 +417,18 @@ function addRowClickEvent() {
   const rows = document.querySelectorAll("#dataTable tbody tr");
   rows.forEach(row => {
     row.addEventListener("click", () => {
+      // 1) Check if this row is already expanded
+      const alreadyExpanded = row.classList.contains("expanded");
+
+      // 2) Collapse (unselect) all rows
+      rows.forEach(r => {
+        r.classList.remove("expanded");
+        // Optionally remove any small-font classes too
+        r.querySelectorAll("td").forEach(cell => cell.classList.remove("small-font"));
+      });
+
+      // 3) If this row wasn’t previously expanded, expand it now
+      if (!alreadyExpanded) {      
       row.classList.toggle("expanded");
 
       // Example: if content is long, use smaller font
@@ -429,6 +440,15 @@ function addRowClickEvent() {
           cell.classList.remove("small-font");
         }
       });
+      if (row._marker) {
+        // You can open its popup
+        row._marker.openPopup();
+
+        // Optionally pan/zoom the map to that marker
+        map.setView(row._marker.getLatLng(), 13); 
+        // (Change 15 to your preferred zoom level)
+      }
+    }
     });
   });
 }
@@ -479,32 +499,66 @@ function updateTableColumns() {
  * SHOW MAP POPUP (MARKERS BASED ON VISIBLE ROWS)
  ************************************************************/
 function handleShowMap() {
-  const visibleRows = document.querySelectorAll("#dataTable tbody tr:not([style*='display: none'])");
+  const mapPopup = document.getElementById("mapPopup");
+  const showMapButton = document.getElementById("showMapButton");
+
+  if (mapPopup.style.display === "none") {
+    // If map is closed, open it
+    mapPopup.style.display = "block";
+    showMapButton.textContent = "Karte schließen";  // Toggle label
+
+    // Now update the markers to show visible rows
+    updateMapMarkers();
+    
+  } else {
+    // If map is open, close it
+    mapPopup.style.display = "none";
+    showMapButton.textContent = "Karte aller Ergebnisse";
+  }
+}
+
+
+function updateMapMarkers() {
+  // Only proceed if the map is currently shown
+  const mapPopup = document.getElementById("mapPopup");
+  if (mapPopup.style.display === "none") {
+    return; // do nothing if map is hidden
+  }
+
+  // 1) Identify visible rows
+  const visibleRows = document.querySelectorAll(
+    "#dataTable tbody tr:not([style*='display: none'])"
+  );
   const bounds = L.latLngBounds();
 
-  // Clear old markers
+  // 2) Remove old markers
   markers.forEach(marker => map.removeLayer(marker));
   markers.length = 0;
 
+  // 3) Add markers for each visible row
   visibleRows.forEach(row => {
     const longitude = row.getAttribute("data-longitude");
     const latitude = row.getAttribute("data-latitude");
     const name = row.getAttribute("data-name");
 
     if (longitude && latitude) {
-      const marker = L.marker([latitude, longitude])
-                      .addTo(map)
-                      .bindPopup(name);
+      const marker = L.marker([latitude, longitude]).addTo(map).bindPopup(name);
       markers.push(marker);
       bounds.extend(marker.getLatLng());
+      row._marker = marker;
+    } else {
+      // If needed, remove any old reference
+      row._marker = null;
     }
   });
 
+  // 4) Fit map to visible markers
   if (markers.length > 0) {
-    map.fitBounds(bounds, { padding: [20, 20] });
+    //map.fitBounds(bounds, { padding: [20, 20] });
   }
 
-  // Show the map popup
-  const mapPopup = document.getElementById("mapPopup");
-  mapPopup.style.display = "block";
+  // 5) Invalidate size if needed (if container might have changed size)
+  setTimeout(() => {
+    map.invalidateSize();
+  }, 100);
 }
