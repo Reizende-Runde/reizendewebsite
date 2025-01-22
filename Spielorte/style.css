@@ -6,6 +6,41 @@ main {
   max-width: 1000px;
   margin: 0 auto;
 }
+.filter-container {
+  display: flex;
+  justify-content: space-between; /* On desktop, side-by-side */
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* The container of checkbox labels (filters) */
+.column-selector {
+  display: flex;       /* let the checkbox labels flow horizontally */
+  flex-wrap: wrap;     /* wrap to new line if there's not enough space */
+  gap: 5px;            /* spacing between filter buttons */
+}
+
+/* On mobile, stack them vertically:
+   - The filter area on top
+   - The search bar underneath */
+@media (max-width: 600px) {
+  .filter-container {
+    flex-direction: column;     /* stack top-to-bottom */
+    align-items: flex-start;    /* left-align the items */
+  }
+
+  /* The filters (checkbox labels) still wrap horizontally,
+     but now they appear in a separate 'row' above the search bar */
+  .column-selector {
+    margin-bottom: 10px;  /* space below filters before the search bar */
+    justify-content: flex-start; /* optional: align them left if needed */
+  }
+
+  /* Make the search bar take full width if desired */
+  #filterInput {
+    width: 100%;
+  }
+}
 
 /* ---------- TABLE + GENERAL STYLES ---------- */
 table {
