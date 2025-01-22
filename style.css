@@ -42,6 +42,16 @@
     font-weight: 600;
     color: #fff;
   }
+  /* By default: show desktop text, hide mobile text */
+.desktop-text {
+  display: inline;
+}
+.mobile-text {
+  display: none;
+}
+
+/* On smaller screens (e.g. max-width: 600px), swap them */
+
   
   /* Navigation (Hauptmenü) */
   nav ul {
@@ -330,7 +340,7 @@
   /* ---------------------------------------- */
   /* Responsive Anpassungen                   */
   /* ---------------------------------------- */
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     /* Mobile: Navigation ausblenden oder umwandeln */
     nav ul {
       display: none; /* Hier könnte ein Hamburger-Menü umgesetzt werden */
@@ -349,6 +359,12 @@
     }
     .hero p {
       font-size: 1rem;
+    }
+    .desktop-text {
+      display: none;
+    }
+    .mobile-text {
+      display: inline;
     }
   }
   

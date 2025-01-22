@@ -1,194 +1,272 @@
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 16px;
-    overflow-x: auto; /* Make table horizontally scrollable */
-    display: block; /* Ensure the table is block-level for scrolling */
-  }
+/* General layout for the main content area */
+main {
+  padding: 2rem 1rem;
+}
+.content-section {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.filter-container {
+  display: flex;
+  justify-content: space-between; /* On desktop, side-by-side */
+  align-items: center;
+  margin-bottom: 10px;
+}
 
-  th, td {
-    padding: 12px;
-    border: 1px solid #ddd;
-    text-align: left;
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide overflow text */
-    text-overflow: ellipsis; /* Add ellipsis for overflow text */
-    max-width: 200px; /* Fixed size for cells */
-  }
+/* The container of checkbox labels (filters) */
+.column-selector {
+  display: flex;       /* let the checkbox labels flow horizontally */
+  flex-wrap: wrap;     /* wrap to new line if there's not enough space */
+  gap: 5px;            /* spacing between filter buttons */
+}
 
-  th {
-    background-color: #b21f2d; /* Vereinsfarbe */
-    color: white;
-  }
-
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
+/* On mobile, stack them vertically:
+   - The filter area on top
+   - The search bar underneath */
+@media (max-width: 600px) {
   .filter-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+    flex-direction: column;     /* stack top-to-bottom */
+    align-items: flex-start;    /* left-align the items */
   }
 
-  .filter-container select, .filter-container input {
-    padding: 8px;
-    font-size: 16px;
-  }
-
-  #noResultsMessage {
-    display: none;
-    text-align: center;
-    color: red;
-    margin-top: 10px;
-  }
-
-  .table-wrapper {
-    overflow-x: auto; /* Make the wrapper horizontally scrollable */
-    margin: 0 auto; /* Center the table */
-    max-width: 1000px; /* Set a max width for the table */
-  }
-
-  .expanded {
-    white-space: normal /* Allow text to wrap */ !important;
-    overflow: visible !important; /* Show overflow text */
-    text-overflow: clip !important; /* Remove ellipsis */
-    max-width: none !important; /* Remove fixed size */
-    box-sizing: content-box !important; /* Prevent the border from increasing the row size */
-  }
-
+  /* The filters (checkbox labels) still wrap horizontally,
+     but now they appear in a separate 'row' above the search bar */
   .column-selector {
-display: flex;
-flex-wrap: wrap;
-gap: 5px; /* Smaller spacing between items */
+    margin-bottom: 10px;  /* space below filters before the search bar */
+    justify-content: flex-start; /* optional: align them left if needed */
+  }
+
+  /* Make the search bar take full width if desired */
+  #filterInput {
+    width: 100%;
+  }
 }
 
-.checkbox-label {
-display: flex;
-align-items: center;
-gap: 3px;
-font-size: 12px; /* Smaller font size */
-cursor: pointer;
-padding: 2px 6px;
-background-color: #f9f9f9;
-border: 1px solid #ddd; /* Minimal border for visibility */
-border-radius: 3px;
-transition: background-color 0.2s ease, border-color 0.2s ease;
+/* ---------- TABLE + GENERAL STYLES ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  display: table; 
+  table-layout: auto;
 }
 
-.checkbox-label:hover {
-background-color: #f1f1f1;
-border-color: #bbb;
+td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+  max-width: 200px; /* Fixed size for cells */
 }
 
-.checkbox-label input[type="checkbox"] {
-display: none; /* Hide the default checkbox */
+th {
+  background-color: #b21f2d; /* Vereinsfarbe */
+  color: white;
+  position: relative; /* For filter icon positioning */
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap; /* Prevent text from wrapping */
+  max-width: 200px; /* Fixed size for cells */
+  overflow: visible; /* Let the icon (popover, etc.) appear fully */
 }
 
-.checkbox-label .checkbox-custom {
-font-weight: 500; /* Less bold */
-}
-
-.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
-background-color: #b21f2d;
-color: white;
-border-radius: 3px;
-padding: 2px 5px;
+tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
 /* Add hover effect to rows */
 #dataTable tbody tr {
-cursor: pointer; /* Show pointer cursor to indicate interactivity */
-transition: background-color 0.3s ease; /* Smooth hover effect */
+  cursor: pointer; /* Show pointer cursor to indicate interactivity */
+  transition: background-color 0.3s ease; /* Smooth hover effect */
 }
 
 #dataTable tbody tr:hover {
-background-color: #f1f1f1; /* Subtle background change on hover */
+  background-color: #f1f1f1; /* Subtle background change on hover */
 }
 
 /* Highlight the expanded row */
 #dataTable tbody tr.expanded {
-background-color: #ffe5e5; /* Highlight to show it's expanded */
-border-left: 4px solid #b21f2d; /* Visual emphasis */
+  background-color: #ffe5e5; /* Highlight to show it's expanded */
+  border-left: 4px solid #b21f2d; /* Visual emphasis */
 }
-
-#dataTable tbody tr.expanded td{
-    white-space: normal /* Allow text to wrap */ !important;
-    overflow: visible !important; /* Show overflow text */
-    }
+/* Expanded cells can wrap text */
+#dataTable tbody tr.expanded td {
+  white-space: normal !important;
+  overflow: visible !important; /* Show overflow text */
+  text-overflow: clip !important; /* Remove ellipsis */
+  max-width: none !important; /* Remove fixed size */
+  box-sizing: content-box !important; /* Prevent the border from increasing the row size */
+}
 
 .small-font {
-  font-size: 13px; /* Decrease font size by 2 points */
+  font-size: 13px; /* Decrease font size slightly */
 }
+
+/* ---------- MAP 1 BUTTON ---------- */
+.interactive-map-button {
+  padding: 5px 10px;
+  background-color: #126324;
+  color: white;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-bottom: 1rem
+}
+
+.interactive-map-button:hover {
+  background-color: #0d4f1b;
+}
+
+/* ---------- MAP 2 BUTTON ---------- */
 .map-button {
-    padding: 5px 10px;
-    background-color: #b21f2d;
-    color: white;
-    border-radius: 4px;
-    text-decoration: none;
-    font-size: 12px;
-    display: inline-block;
-  }
-  
-  .map-button:hover {
-    background-color: #a11b29;
-  }
-  #mapPopup {
-    display: none; /* Hidden by default */
-    position: fixed;
-    top: 10%;
-    left: 10%;
-    width: 80%;
-    height: 80%;
-    background: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    border-radius: 8px;
-    overflow: hidden;
-  }
+  padding: 5px 10px;
+  background-color: #b21f2d;
+  color: white;
+  border-radius: 5px;
+  font-size: 12px;
+  margin-bottom: 1rem
+}
 
-  #mapPopup .map-container {
-    width: 100%;
-    height: 100%;
-  }
+.map-button:hover {
+  background-color: #a11b29;
+}
 
-  #mapPopup .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #b21f2d;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    font-size: 18px;
-    line-height: 30px;
-    text-align: center;
-    cursor: pointer;
-  }
+#mapPopup {
+  display: none; /* hidden by default until the button is clicked */
+  position: relative; 
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding: 1rem;
+  /* You might use a box-shadow for emphasis */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  margin-bottom: 1rem;
+  margin-top: 0 !important; 
+}
 
-  #mapPopup .close-btn:hover {
-    background: #a11b29;
-  }
 
-  /* Button Above the Table */
-  .show-map-btn {
-    display: inline-block;
-    margin-bottom: 15px;
-    padding: 10px 20px;
-    background-color: #b21f2d;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-    border: none;
-    cursor: pointer;
-  }
+/* The map container where Leaflet draws the tiles */
+#map {
+  height: 400px;  /* or bigger if you want */
+  width: 100%;
+  border: 1px solid #ccc; /* a subtle border to match other elements */
+  margin-top: 0.5rem;
+}
 
-  .show-map-btn:hover {
-    background-color: #a11b29;
-  }
-  
+
+/* ---------- FILTER CONTAINER & NO RESULTS ---------- */
+.filter-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.filter-container select,
+.filter-container input[type="text"] {
+  padding: 8px;
+  font-size: 16px;
+}
+
+#noResultsMessage {
+  display: none;
+  text-align: center;
+  color: red;
+  margin-top: 10px;
+}
+
+/* ---------- TABLE WRAPPER ---------- */
+.table-wrapper {
+  overflow-x: auto; /* Make the wrapper horizontally scrollable */
+  margin: 0 auto; /* Center the table */
+  max-width: 1000px; /* Set a max width for the table */
+  min-height: 600px;
+}
+
+/* ---------- COLUMN SELECTOR CHECKBOXES ---------- */
+.column-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px; /* Smaller spacing between items */
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px; /* Smaller font size */
+  cursor: pointer;
+  padding: 2px 6px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd; /* Minimal border for visibility */
+  border-radius: 3px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.checkbox-label:hover {
+  background-color: #f1f1f1;
+  border-color: #bbb;
+}
+
+.checkbox-label input[type="checkbox"] {
+  display: none; /* Hide the default checkbox */
+}
+
+.checkbox-label .checkbox-custom {
+  font-weight: 500; /* Less bold */
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+  background-color: #b21f2d;
+  color: white;
+  border-radius: 3px;
+  padding: 2px 5px;
+}
+
+/* ---------- FILTER ICON + POPOVER ---------- */
+.filter-icon {
+  font-weight: bold;
+  margin-left: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+.filter-icon.active-filter {
+  color: #ffc107; /* gold color to indicate active */
+}
+
+/* The popover that appears when clicking the filter icon */
+.filter-popover {
+  position: absolute;
+  top: 100%; 
+  left: 0; 
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  padding: 8px;
+  z-index: 99999;
+  display: none;
+  max-height: 200px; 
+  overflow-y: auto; 
+  width: 180px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+
+  /* Ensure popover text is readable (not white-on-white) */
+  color: #000; 
+}
+.filter-popover label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #000; /* override any inheritance of white */
+}
+.filter-popover button {
+  margin: 4px 0;
+  font-size: 14px;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+.filter-checkbox {
+  margin-right: 6px;
+}
