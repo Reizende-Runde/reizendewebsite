@@ -188,9 +188,9 @@
         }
         maxFaktor = ergebnis == "Gewonnen" ? maxFaktor : maxFaktor*-2;
         let resultString = ergebnis == "Gewonnen" ? `, ${ergebnis}.`: `, ${ergebnis} ${maxFaktor}.`;
-        const summaryStr = summaryParts.join(", ") + `${resultString}   ${maxFaktor} x ${base} (für ${spielArt}) = ${base*maxFaktor}`;
+        const summaryStr = summaryParts.join(", ") + `${resultString}<br>${maxFaktor} × ${base} (für ${spielArt}) = ${base*maxFaktor}`;
         document.getElementById('result').textContent = gameValue.toString();
-        document.getElementById('summary').textContent = summaryStr;
+        document.getElementById('summary').innerHTML = summaryStr;
     
         document.getElementById('resetForm').addEventListener('click', () => {
           form.reset();

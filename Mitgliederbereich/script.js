@@ -127,8 +127,11 @@ const firebaseConfig = {
         if (user) {
           fetchProtectedContent();
         } else {
-          console.error("User not authenticated. Redirecting to login...");
+          
+          auth.signOut();
+          console.log("User not logged in. Cleared exisiting tokens.");
           window.location.href = '..';
+          
         }
       });
 
