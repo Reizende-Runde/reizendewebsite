@@ -273,3 +273,53 @@ html {
 body {
   scroll-padding-top: var(--header-height);
 }
+
+@media (max-width: 600px) {
+  /* Add spacing to the sides of the screen for tiles */
+  .container {
+    padding: 0 10px; /* Add 10px spacing to the left and right */
+    max-width: 100%; /* Ensure the container stretches across the screen */
+  }
+
+  /* Ensure tiles have some spacing on smaller screens */
+  .tile-container {
+    gap: 10px; /* Keep a consistent gap between tiles */
+  }
+
+  .tile, .tile-null, .tile-ansage {
+    width: calc(33.333% - 10px); /* Maintain three tiles per row with spacing */
+    height: auto;
+    aspect-ratio: 1; /* Make tiles perfectly square */
+  }
+
+  /* Adjust button layout while preserving their spacing */
+  .bottom-row {
+    flex-wrap: wrap;
+    gap: 10px; /* Consistent gap for buttons */
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  button[type="submit"], #resetForm {
+    width: 48%; /* Allow two buttons per row with a gap */
+    font-size: 16px;
+  }
+
+ /* Reduce gap between sets of tiles in the .mitOhneFaktor section */
+ .mitOhneFaktor {
+  gap: 10px; /* Adjust gap between the two fieldsets */
+}
+
+.mitOhneFaktor fieldset {
+  margin: 0; /* Remove any default margins */
+  padding: 0; /* Remove unnecessary padding */
+}
+
+/* Fine-tune spacing for the tile-container */
+.mitOhneFaktor .tile-container {
+  gap: 5px; /* Reduce spacing between tiles */
+  justify-content: center; /* Ensure alignment */
+}
+}
+
+

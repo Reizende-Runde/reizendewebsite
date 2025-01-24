@@ -145,15 +145,16 @@
         const isNullGame = ['Null', 'Null Hand', 'Null Hand Ouvert', 'Null Ouvert'].includes(spielArt);
     
         let gameValue = 0;
+        let base = 0;
         if (isNullGame && ergebnisFactor !== 0) {
-          let base = 0;
+          
           if (spielArt === 'Null') base = 23;
           else if (spielArt === 'Null Hand') base = 35;
           else if (spielArt === 'Null Hand Ouvert') base = 59;
           else if (spielArt === 'Null Ouvert') base = 46;
           gameValue = base * ergebnisFactor;
         } else if (baseValues[spielArt]) {
-          const base = baseValues[spielArt];
+          base = baseValues[spielArt];
           const usedFactor = faktor !== null ? faktor : 0;
           const multiplier = usedFactor + 1 + optionen.length;
           gameValue = base * multiplier * ergebnisFactor;
@@ -165,20 +166,29 @@
     
         let summaryParts = [];
         let baseStr = spielArt;
+        let maxFaktor = faktor !== null ? faktor : 0;
         if (mitOhne) baseStr += ` ${mitOhne}`;
-        if (faktor !== null) baseStr += ` ${faktor}`;
+        if (faktor !== null) baseStr += ` ${maxFaktor},`;
+        maxFaktor += 1;
+        if (mitOhne) baseStr += ` Spiel ${maxFaktor}`;
         if (baseStr.trim()) summaryParts.push(baseStr.trim());
         if (optionen.length > 0) {
-          summaryParts = summaryParts.concat(optionen);
+              optionen.forEach((option, index) => {
+              maxFaktor += 1
+              summaryParts.push(`${option} ${maxFaktor}`);
+          });
         }
         if (kontraRe.includes("Kontra")) {
-          summaryParts.push("Kontra angesagt");
+          maxFaktor *= 2;
+          summaryParts.push(`Kontra angesagt ${maxFaktor}`);
         }
         if (kontraRe.includes("Re")) {
-          summaryParts.push("Re angesagt");
+          maxFaktor *= 2;
+          summaryParts.push(`Re angesagt ${maxFaktor}`);
         }
-    
-        const summaryStr = summaryParts.join(", ") + (ergebnis ? `: ${ergebnis}.` : '');
+        maxFaktor = ergebnis == "Gewonnen" ? maxFaktor : maxFaktor*-2;
+        let resultString = ergebnis == "Gewonnen" ? `, ${ergebnis}.`: `, ${ergebnis} ${maxFaktor}.`;
+        const summaryStr = summaryParts.join(", ") + `${resultString}   ${maxFaktor} x ${base} (für ${spielArt}) = ${base*maxFaktor}`;
         document.getElementById('result').textContent = gameValue.toString();
         document.getElementById('summary').textContent = summaryStr;
     
