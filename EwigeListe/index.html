@@ -21,9 +21,38 @@
   <!-- Your existing CSS -->
   <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" href="../Mitgliederbereich/style.css">
+
+  <!-- <style>/* Ensure iframe does not overlap content */
+    div[style*="zoom: 150%;"] {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 800px;
+}
+
+iframe#embeddedSheet {
+  pointer-events: none; /* Prevent interaction with the overlay */
+  position: relative;
+  z-index: 1;
+}
+
+div[style*="zoom: 150%;"]:hover iframe#embeddedSheet {
+  pointer-events: auto; /* Allow interaction on hover */
+}
+
+@media (max-width: 768px) {
+  div[style*="zoom: 150%;"] {
+    height: 600px; /* Adjust for smaller screens */
+  }
+}
+
+    
+    </style> -->
+
 </head>
 <body>
 
+  
   <!-- HEADER -->
   <!-- TODO: Alles was geht dynamisch ausm Backend laden, z.b Titel, "Mitgliederbereich"--> 
   <header>
@@ -66,7 +95,7 @@
             Ewigen Liste↗
           </a>
         </span> 
-        an.
+        an. Zum Bearbeiten rufe diese bitte direkt über den Link auf.
       </p>
 
       <!-- NOTE FOR MOBILE ONLY (Hidden by default) TODO: Text dynamisch laden -->
@@ -88,17 +117,17 @@
       </p>
 
       <!-- EMBEDDED GOOGLE SHEET -->
-      <div 
-        style="
-          width: 100%; 
-          height: 800px; 
-          overflow: hidden; 
-          zoom: 150%;
-        "
-      >
-        <iframe id="embeddedSheet" src="" style="width:100%; height:800px; border:0;" frameborder="0" scrolling="auto"></iframe>
+      <div style="width: 100%; height: 800px; overflow: hidden; position: relative;">
+        <iframe 
+          id="embeddedSheet" 
+          src="" 
+          style="position: absolute; top: -30px; width: calc(100% + 30px); height: 100%; border: 0;" 
+          frameborder="0"
+          scrolling="no">
+        </iframe>
       </div>
-    </section>
+      
+      </section>
   </main>
 
   <!-- FOOTER -->
