@@ -42,6 +42,12 @@
     font-weight: 600;
     color: #fff;
   }
+
+  .logo:hover {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffd700;
+  }
   /* By default: show desktop text, hide mobile text */
 .desktop-text {
   display: inline;
@@ -125,14 +131,15 @@
   .cta-button {
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background-color: #ffd700;
-    color: #b21f2d;
+    background-color: #b21f2d;
+    color: #ffffff;
     font-weight: 600;
     border-radius: 4px;
     transition: background-color 0.3s;
   }
   .cta-button:hover {
     background-color: #ffcc00;
+    color: #b21f2d;
   }
   
   /* ---------------------------------------- */
@@ -214,7 +221,8 @@
   }
   
   button[type="submit"]:hover {
-    background-color: #a01925;
+    background-color: #ffd700;
+    color: #b21f2d;
   }
   
   .error {
@@ -253,6 +261,7 @@
     font-size: 1.75rem;
     margin-bottom: 1rem;
     color: #b21f2d;
+    text-align: center;
   }
   .news-items {
     display: flex;

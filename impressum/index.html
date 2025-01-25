@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reizende Runde – Berliner Skatverein</title>
+  <link rel="icon" href="https://raw.githubusercontent.com/haumbaus/reizendewebsite/refs/heads/main/assets/favicon3.png" type="image/png">
+
+  <!-- Google Fonts Beisspiel -->
+   <!-- TODO: runterladen, hardcoden, und links entfernen -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link 
+    href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" 
+    rel="stylesheet">
+
+  <!-- Dein externes Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../Mitgliederbereich/style.css">
+  <link rel="stylesheet" href="../style.css">
+
+</head>
+<body>
+    
+  <!-- HEADER, TODO: Inhalte dynamisch ausm Backend laden -->
+  <header>
+    <a href=".." class="logo">Reizende Runde</a>
+    
+    <!-- Navigation (Platzhalter) -->
+    <nav>
+      <ul>
+        <li><a href="#about">Über uns</a></li>
+        <li><a href="#aktuelles">Aktuelles</a></li>
+        <li><a href="#termine">Termine</a></li>
+        <li><a href="#kontakt">Mitglied werden</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+
+    <!-- Bereich für Button + Hamburger-Menü (oben rechts) -->
+    <div class="header-right">
+      <!-- NEUER BUTTON für Mitglieder-Login -->
+      <div class="member-area">
+        <a href="#" class="member-btn" id="openLoginModal">
+          <span class="desktop-text">Mitgliederbereich</span>
+          <span class="mobile-text">Mitglieder</span>
+        </a>
+        
+      </div>
+      <!-- Mobile-Hamburger-Icon (Beispiel) -->
+      <div class="hamburger"><i class="fas fa-bars"></i></div>
+    </div>
+  </header>
+
+  
+
+  <!-- ÜBER UNS, TODO: Inhalte dynamisch ausm Backend laden -->
+  <section id="impressum" class="about">
+    <h2>Impressum</h2>
+    <img
+   id="c1img"
+   src="https://raw.githubusercontent.com/haumbaus/reizendewebsite/refs/heads/main/assets/impressum.webp"
+   alt=""
+   style="width: 20%; object-fit: cover; display: block; margin: 0 auto; margin-top: 20px; margin-bottom: 20px;"
+   >
+</section>
+
+
+  <!-- FUSSZEILE, TODO: Inhalte dynamisch ausm Backend laden -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Kontakt</h4>
+        <ul>
+            <li><a href="mailto:info&#64;reizenderunde.de">info&#64;reizenderunde.de</a></li>
+            <li><a href="#">Impressum</a></li>
+            <li><a href="../datenschutz">Datenschutzerklärung</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Menü</h4>
+        <ul>
+          <li><a href="#about">Über uns</a></li>
+          <li><a href="#aktuelles">Aktuelles</a></li>
+          <li><a href="#termine">Termine</a></li>
+          <li><a href="#mitglied">Mitglied werden</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Folge uns</h4>
+        <ul>
+          <li><a href="https://www.instagram.com/reizenderunde" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram-square"></i> Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      © 2025 Reizende Runde – Alle Rechte vorbehalten.
+    </div>
+  </footer>
+
+  <!-- Login Modal -->
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close-button">&times;</span>
+    <h2>Login</h2>
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="modal-email">E-Mail:</label>
+        <input type="email" id="modal-email" required>
+      </div>
+      <div class="form-group">
+        <label for="modal-password">Passwort:</label>
+        <input type="password" id="modal-password" required>
+      </div>
+      <button type="submit">Anmelden</button>
+      <div id="modal-error" class="error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- Authentifizierungs- und Modal-Skript -->
+<!-- Firebase App (das Kern-Firebase SDK) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<!-- Firebase Authentication -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+
+
+<script src="../script.js"></script>
+  
+</body>
+</html>
