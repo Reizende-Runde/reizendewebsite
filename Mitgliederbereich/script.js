@@ -19,7 +19,7 @@ const firebaseConfig = {
           const user = auth.currentUser;
 
           if (!user) {
-            window.location.href = "../index.html";
+            window.location.href = "..";
             return;
           }
             //TODO: Fehlermeldungen überarbeiten 
