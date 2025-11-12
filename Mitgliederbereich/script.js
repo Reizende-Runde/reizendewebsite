@@ -82,14 +82,14 @@ const firebaseConfig = {
                 document.getElementById("c5link").textContent = data.Card5.linkText; 
 
                 //Card6
-                // document.getElementById("c6img").src = data.Card6.image.src;
-                // document.getElementById("c6hrefimg").href = data.Card6.href;
-                // document.getElementById("c6img").alt = data.Card6.image.alt;
-                // document.getElementById("c6href").textContent = data.Card6.title
-                // document.getElementById("c6href").href = data.Card6.href;
-                // document.getElementById("c6description").textContent = data.Card6.oneliner;
-                // document.getElementById("c6link").href = data.Card6.href;
-                // document.getElementById("c6link").textContent = data.Card6.linkText; 
+                document.getElementById("c6img").src = data.Card6.image.src;
+                document.getElementById("c6hrefimg").href = data.Card6.href;
+                document.getElementById("c6img").alt = data.Card6.image.alt;
+                document.getElementById("c6href").textContent = data.Card6.title
+                document.getElementById("c6href").href = data.Card6.href;
+                document.getElementById("c6description").textContent = data.Card6.oneliner;
+                document.getElementById("c6link").href = data.Card6.href;
+                document.getElementById("c6link").textContent = data.Card6.linkText; 
 
                 //Card7
                 // document.getElementById("c7img").src = data.Card7.image.src;
