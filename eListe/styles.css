@@ -1,0 +1,378 @@
+:root {
+    --c1: #0a84ff;
+    --bg: #f7f7f8;
+    --ok: #0e6b34;
+    --bad: #7a1420;
+    --grid: #c6c6ce;
+}
+
+* {
+    box-sizing: border-box
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans",system-ui,-apple-system,Arial,sans-serif;
+    background: var(--bg);
+    color: #111
+}
+
+h1 {
+    margin: 16px 0 6px
+}
+
+h2 {
+    margin: 14px 0 8px;
+    font-size: 1.1rem
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 12px
+}
+
+fieldset {
+    border: none;
+    margin: 0;
+    padding: 0
+}
+
+legend {
+    font-weight: 600;
+    margin-bottom: 6px
+}
+
+label {
+    cursor: pointer
+}
+
+input[type=radio], input[type=checkbox] {
+    display: none
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06)
+}
+
+.row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center
+}
+
+    .row > div {
+        flex: 1 1 200px
+    }
+
+.select, select, input[type=text] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 16px
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start
+}
+
+.big-button {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer
+}
+
+.primary {
+    background: #0a84ff;
+    border-color: #0a84ff;
+    color: #fff
+}
+
+.danger {
+    background: #dc3545;
+    border-color: #dc3545;
+    color: #fff
+}
+
+.tile, .tile-null, .tile-ansage {
+    display: block;
+    position: relative;
+    width: 70px;
+    height: 70px;
+    background: #f0f0f0;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    user-select: none;
+    transition: .2s;
+    text-align: center
+}
+
+    .tile .symbol {
+        font-size: 34px;
+        line-height: 70px
+    }
+
+    .tile:hover, .tile-null:hover, .tile-ansage:hover {
+        background: #e6e6e6
+    }
+
+input:checked + .tile, input:checked + .tile-null, input:checked + .tile-ansage {
+    border-color: #0a84ff;
+    background: #d0e4ff
+}
+
+.tile-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px
+}
+
+    .tile-container.big-choice .tile {
+        width: 84px;
+        height: 84px
+    }
+
+.tile-null .letterN, .tile-ansage .ansageLabel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 34px;
+    font-weight: 700
+}
+
+.tile-null .overlayIcons, .tile-ansage .overlayIcons {
+    position: absolute;
+    top: 18%;
+    right: -2px;
+    font-size: 18px
+}
+
+.disabled {
+    opacity: .45;
+    pointer-events: none
+}
+
+.badge {
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: .95rem
+}
+
+    .badge.ok {
+        background: #e9f7ef;
+        color: #0e6b34;
+        border: 1px solid #bfe8cd
+    }
+
+    .badge.bad {
+        background: #fde7ea;
+        color: #7a1420;
+        border: 1px solid #f5c2c7
+    }
+
+.table {
+    width: 100%;
+    border-collapse: collapse
+}
+
+    .table th, .table td {
+        background: #fff;
+        padding: 8px 10px;
+        border: 1px solid var(--grid);
+        vertical-align: middle
+    }
+
+    .table thead th {
+        background: #fafafa
+    }
+
+.vhead {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    letter-spacing: .4px;
+    padding: 6px 4px;
+    text-align: center;
+    min-width: 28px
+}
+
+.th-sub {
+    font-size: .75rem;
+    color: #666;
+    font-weight: 600
+}
+
+.numB {
+    color: #1a56db;
+    font-weight: 700
+}
+
+.x {
+    font-weight: 700
+}
+
+tr.passed td {
+    color: #666;
+    text-decoration: line-through;
+    background: #f3f3f6
+}
+
+.cell-right {
+    text-align: right
+}
+
+.cell-center {
+    text-align: center
+}
+
+tr.editing {
+    outline: 2px solid var(--c1);
+    outline-offset: -2px
+}
+
+tr.clickable {
+    cursor: pointer
+}
+
+.meta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap
+}
+
+    .meta .kv {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 10px;
+        padding: 8px 10px;
+        min-width: 150px
+    }
+
+        .meta .kv b {
+            display: block;
+            font-size: .8rem;
+            color: #444;
+            margin-bottom: 4px
+        }
+
+        .meta .kv span {
+            font-weight: 700
+        }
+
+#toast {
+    position: fixed;
+    right: 16px;
+    top: 16px;
+    z-index: 9999;
+    display: none
+}
+
+    #toast .inner {
+        background: #111;
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.2)
+    }
+
+    #toast.big .inner {
+        font-size: 1.4rem;
+        padding: 16px 20px;
+        text-align: center
+    }
+
+.mini-scores {
+    margin-top: 6px;
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    gap: 6px
+}
+
+    .mini-scores .pill {
+        background: #fafafa;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 6px 8px;
+        font-size: .9rem;
+        display: flex;
+        justify-content: space-between
+    }
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 8px
+}
+
+/* 2×2 Raster für Eingabe */
+.grid-upper {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 12px;
+}
+
+#cardSpielwahl {
+    grid-column: 1;
+    grid-row: 1
+}
+
+#cardErgebnis {
+    grid-column: 2;
+    grid-row: 1
+}
+
+#cardInfo {
+    grid-column: 1;
+    grid-row: 2
+}
+
+#cardAktion {
+    grid-column: 2;
+    grid-row: 2
+}
+
+@media(max-width:980px) {
+    .grid-upper {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto
+    }
+
+    #cardSpielwahl, #cardErgebnis, #cardInfo, #cardAktion {
+        grid-column: 1
+    }
+}
+
+@media(max-width:780px) {
+    .tile, .tile-null, .tile-ansage {
+        width: calc(33.333% - 6px);
+        height: auto;
+        aspect-ratio: 1
+    }
+
+        .tile .symbol {
+            line-height: 1;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%)
+        }
+
+    .tile-container.big-choice .tile {
+        width: auto;
+        height: auto
+    }
+}
