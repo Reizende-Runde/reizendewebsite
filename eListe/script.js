@@ -85,6 +85,33 @@ function computeGameValue(state) {
     return { value: v, base, maxF, summary: buildSummary(state, base, maxF) };
 }
 
+/* Bei 4-Spieler-Liste: Geber kann nicht Alleinspielerin sein */
+function enforceSoloNotDealer() {
+    const sel = $('#solo');
+    if (!sel || !S.players.length) return;
+
+    const n = S.players.length;
+
+    // Nur bei 4 Spielerinnen einschränken
+    if (n !== 4) {
+        Array.from(sel.options).forEach(o => o.disabled = false);
+        return;
+    }
+
+    const game = currentGameNumber();
+    const dealerIdx = dealerIdxForGame(game, n);
+
+    Array.from(sel.options).forEach((opt, idx) => {
+        opt.disabled = (idx === dealerIdx);
+    });
+
+    // Falls aktuell der Geber ausgewählt war → auf nächste Spielerin springen
+    if (sel.selectedIndex === dealerIdx) {
+        sel.selectedIndex = (dealerIdx + 1) % n;
+    }
+}
+
+
 function buildSummary(state, base, maxFshown) {
     const { art, mo, f, opts, res } = state;
     let parts = [];
@@ -142,39 +169,6 @@ $('#start').addEventListener('click', () => {
     initRunning();
     save();
 });
-
-/* Init Laufbetrieb */
-function initRunning() {
-    $('#setup').style.display = 'none';
-    $('#running').style.display = '';
-    $('#metaBar').style.display = '';
-
-    const soloSel = $('#solo'); soloSel.innerHTML = '';
-    S.players.forEach((n, i) => soloSel.add(new Option(n, String(i))));
-
-    wireOptionCascade();
-    wireFactorDropdown();
-    enforceNullLock();
-
-    $$('input[name="res"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
-    $$('input[name="art"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
-    $$('input[name="mo"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
-    $$('input[name="f"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
-
-    $('#add').addEventListener('click', addGame);
-    $('#pass').addEventListener('click', addPassed);
-    $('#undo').addEventListener('click', undo);
-    $('#export').addEventListener('click', exportCSV);
-    $('#abort').addEventListener('click', abortList);
-
-    // Edit-Buttons
-    $('#saveEdit').addEventListener('click', saveEdit);
-    $('#cancelEdit').addEventListener('click', cancelEdit);
-
-    preview();
-    renderTable();
-    updateMeta();
-}
 
 /* Zustand lesen */
 function readState() {
@@ -241,15 +235,11 @@ function validateTrumpGame(st) {
     return true;
 }
 
-/* Spiel eintragen */
-function addGame(e) {
-    e.preventDefault();
-    const st = readState();
-    if (!st.art || !st.res) { alert('Bitte Spielart und Ergebnis wählen.'); return; }
-    if (!validateTrumpGame(st)) return;
-
+/* Spiel mit gegebenem State eintragen (ohne UI-Ereignis) */
+function addGameWithState(st) {
     const calc = computeGameValue(st);
-    const factorNum = (st.f === 'dropdown' ? parseInt($('#fDrop').value || '0', 10)
+    const factorNum = (st.f === 'dropdown'
+        ? parseInt($('#fDrop').value || '0', 10)
         : parseInt(st.f || '0', 10)) || 0;
 
     const n = S.players.length;
@@ -292,9 +282,51 @@ function addGame(e) {
     clearCurrentForm();
 }
 
+/* Fallback: generischer Eintrag (falls noch irgendwo benutzt) */
+function addGame(e) {
+    if (e) e.preventDefault();
+    const st = readState();
+    if (!st.art || !st.res) { alert('Bitte Spielart und Ergebnis wählen.'); return; }
+    if (!validateTrumpGame(st)) return;
+    addGameWithState(st);
+}
+
+/* Direkt-Eintrag bei Klick auf Gewonnen/Verloren */
+function onResultSelected(e) {
+    const val = e.target.value;
+    if (!val) return;
+
+    // Wenn wir im Edit-Modus sind: nur Vorschau aktualisieren
+    if (S.editIdx != null) {
+        preview();
+        updateMeta();
+        return;
+    }
+
+    const st = readState();
+
+    if (!st.art) {
+        alert('Bitte zuerst die Spielart wählen.');
+        e.target.checked = false;
+        return;
+    }
+
+    if (!isNullGame(st.art) && !validateTrumpGame(st)) {
+        e.target.checked = false;
+        return;
+    }
+
+    st.res = val;
+    addGameWithState(st);
+}
+
 /* Eingepasst */
 function addPassed(e) {
     e.preventDefault();
+
+    // Im Edit-Modus kein automatisches Eingepasst über den Button
+    if (S.editIdx != null) return;
+
     const n = S.players.length;
     const g = currentGameNumber();
     const sitterIdx = sitterIdxForGame(g, n);
@@ -465,7 +497,6 @@ window.onRowEdit = function (i) {
     const r = S.rounds[i];
     S.editIdx = i;
     setControlsFromState(r);
-    $('#add').style.display = 'none';
     $('#pass').style.display = 'none';
     $('#saveEdit').style.display = '';
     $('#cancelEdit').style.display = '';
@@ -491,7 +522,6 @@ function setControlsFromState(r) {
 /* Edit abbrechen */
 function cancelEdit() {
     S.editIdx = null;
-    $('#add').style.display = '';
     $('#pass').style.display = '';
     $('#saveEdit').style.display = 'none';
     $('#cancelEdit').style.display = 'none';
@@ -601,31 +631,72 @@ function exportCSV() {
 }
 
 /* Meta + Info-Kachel */
+/* Meta + Spieler-Kachel */
 function updateMeta() {
     const game = currentGameNumber();
     const n = S.players.length || 3;
     const round = Math.ceil(game / n);
-    const dIdx = dealerIdxForGame(game, n);
-    const dealerName = S.players[dIdx] || '';
+    const dealerIdx = dealerIdxForGame(game, n);
 
+    // Meta-Bar oben
     $('#metaGame').textContent = String(game);
     $('#metaRound').textContent = String(round);
-    $('#metaDealer').textContent = dealerName ? `${dealerName} (Platz ${dIdx + 1})` : '–';
 
-    $('#infoGame').textContent = String(game);
-    $('#infoRound').textContent = String(round);
-    $('#infoDealer').textContent = dealerName ? `${dealerName}` : '–';
-
-    // Mini-Scores
+    // Mini-Scores-Kachel: Spielerinnen + Punkte
     const stats = computePlayerStats();
     const wrap = $('#miniScores');
-    if (!stats.length) { wrap.innerHTML = ''; return; }
+    if (!stats.length) {
+        wrap.innerHTML = '';
+        return;
+    }
+
     wrap.innerHTML = S.players.map((p, i) => {
         const s = stats[i] || { sum: 0, won: 0, lost: 0 };
         const v = s.sum || 0;
         const sign = v > 0 ? '+' : '';
-        return `<div class="pill"><span>${escapeHtml(p)}</span><span>${sign}${v}</span></div>`;
+        const dealerClass = (i === dealerIdx) ? ' dealer' : '';
+        return `
+            <div class="pill${dealerClass}">
+                <span class="pill-name">${escapeHtml(p)}</span>
+                <span class="pill-points">${sign}${v}</span>
+            </div>
+        `;
     }).join('');
+    enforceSoloNotDealer();
+}
+
+
+/* Init Laufbetrieb */
+function initRunning() {
+    $('#setup').style.display = 'none';
+    $('#running').style.display = '';
+    $('#metaBar').style.display = '';
+
+    const soloSel = $('#solo'); soloSel.innerHTML = '';
+    S.players.forEach((n, i) => soloSel.add(new Option(n, String(i))));
+
+    enforceSoloNotDealer();
+    wireOptionCascade();
+    wireFactorDropdown();
+    enforceNullLock();
+
+    $$('input[name="res"]').forEach(r => r.addEventListener('change', onResultSelected));
+    $$('input[name="art"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
+    $$('input[name="mo"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
+    $$('input[name="f"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
+
+    $('#pass').addEventListener('click', addPassed);
+    $('#undo').addEventListener('click', undo);
+    $('#export').addEventListener('click', exportCSV);
+    $('#abort').addEventListener('click', abortList);
+
+    // Edit-Buttons
+    $('#saveEdit').addEventListener('click', saveEdit);
+    $('#cancelEdit').addEventListener('click', cancelEdit);
+
+    preview();
+    renderTable();
+    updateMeta();
 }
 
 /* Persistence */
@@ -645,3 +716,9 @@ function save() { localStorage.setItem('skat_list_state', JSON.stringify(S)); }
 
 /* Utils */
 function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
+
+/* Placeholder für preview(), falls im ursprünglichen Code vorhanden */
+function preview() {
+    // Falls du vorher schon eine Preview-Implementierung hattest, hier wieder einsetzen.
+    // Wenn nicht, kannst du diese Funktion auch mit Logik füllen oder entfernen.
+}
