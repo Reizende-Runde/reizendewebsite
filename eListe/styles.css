@@ -381,19 +381,49 @@ tr.clickable {
 /*      GRID-OBERER BEREICH      */
 /* ----------------------------- */
 
-/* Desktop-Layout: 2×2-Grid */
+/* Desktop-Layout: 2-Spalten-Grid, links etwas breiter */
 .grid-upper {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    grid-template-rows: auto auto;
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-rows: auto;
     gap: 12px;
 }
 
-/* Nur breite Screens: genaue Positionierung */
+/* Ergebnis-Karte als Flex-Spalte, Aktionen nach unten */
+#cardErgebnis {
+    display: flex;
+    flex-direction: column;
+}
+
+#cardErgebnis .aktion-block {
+    margin-top: auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Nur breite Screens: genaue Positionierung
+   + Spielauswahl etwas breiter und 9 Farb-/Sonderspiele in einer Reihe
+   + alle Buben-Optionen in einer Reihe */
 @media (min-width: 981px) {
     #cardSpielwahl { grid-column: 1; grid-row: 1; }
-    #cardAktion    { grid-column: 2; grid-row: 2; }
     #cardErgebnis  { grid-column: 2; grid-row: 1; }
+
+    /* Farb-/Sonderspiel: alle 9 Tiles in einer Reihe */
+    #cardSpielwahl fieldset:first-of-type .tile-container {
+        flex-wrap: nowrap;
+    }
+    #cardSpielwahl fieldset:first-of-type .tile-container > label {
+        flex: 0 0 auto;
+    }
+
+    /* Buben: alle Optionen nebeneinander */
+    #moWrap fieldset:last-of-type .tile-container {
+        flex-wrap: nowrap;
+    }
+    #moWrap fieldset:last-of-type .tile-container > label {
+        flex: 0 0 auto;
+    }
 }
 
 /* Tablet & Mobile: Spalte, Reihenfolge = DOM */
@@ -518,7 +548,7 @@ tr.clickable {
 /* ----------------------------- */
 
 .meta-compact {
-    /* drei (hier nur zwei) Boxen nebeneinander */
+    /* zwei Boxen nebeneinander */
     display: flex;
     flex-direction: row;
     justify-content: space-between;

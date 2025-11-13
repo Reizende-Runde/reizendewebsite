@@ -65,13 +65,12 @@
             <div class="kv"><b>Runde</b><span id="metaRound">1</span></div>
             <div class="kv"><b>Spiel</b><span id="metaGame">1</span></div>
         </section>
+
+        <!-- Spieler*innen + Punkte -->
         <div class="card" id="cardInfo">
             <h2>Spieler*innen</h2>
             <div id="miniScores" class="mini-scores"></div>
         </div>
-
-
-
 
         <!-- Setup -->
         <section class="card" id="setup">
@@ -84,7 +83,7 @@
             </div>
             <div class="row">
                 <label><input type="checkbox" id="use4"> 4 Spielerinnen</label>
-                <!--<select id="mode" class="select"><option value="esf">Turnierskat: Erweitertes Seeger-Fabian</option></select>-->
+                <!-- Modus-Auswahl ausgeblendet, ESF ist implizit -->
                 <button class="big-button primary" id="start">Liste starten</button>
             </div>
         </section>
@@ -109,11 +108,26 @@
                         <legend>Farb-/Sonderspiel</legend>
                         <div class="tile-container">
 
-                            <label title="Karo"><input type="radio" name="art" value="Karo"><div class="tile"><span class="symbol">♦️</span></div></label>
-                            <label title="Herz"><input type="radio" name="art" value="Herz"><div class="tile"><span class="symbol">♥️</span></div></label>
-                            <label title="Pik"><input type="radio" name="art" value="Pik"><div class="tile"><span class="symbol">♠️</span></div></label>
-                            <label title="Kreuz"><input type="radio" name="art" value="Kreuz"><div class="tile"><span class="symbol">♣️</span></div></label>
-                            <label title="Grand"><input type="radio" name="art" value="Grand"><div class="tile"><span class="symbol"><b>G</b></span></div></label>
+                            <label title="Karo">
+                                <input type="radio" name="art" value="Karo">
+                                <div class="tile"><span class="symbol">♦️</span></div>
+                            </label>
+                            <label title="Herz">
+                                <input type="radio" name="art" value="Herz">
+                                <div class="tile"><span class="symbol">♥️</span></div>
+                            </label>
+                            <label title="Pik">
+                                <input type="radio" name="art" value="Pik">
+                                <div class="tile"><span class="symbol">♠️</span></div>
+                            </label>
+                            <label title="Kreuz">
+                                <input type="radio" name="art" value="Kreuz">
+                                <div class="tile"><span class="symbol">♣️</span></div>
+                            </label>
+                            <label title="Grand">
+                                <input type="radio" name="art" value="Grand">
+                                <div class="tile"><span class="symbol"><b>G</b></span></div>
+                            </label>
 
                             <label title="Null">
                                 <input type="radio" name="art" value="Null">
@@ -144,17 +158,35 @@
                         <fieldset style="flex:1">
                             <legend>Mit/Ohne</legend>
                             <div class="tile-container">
-                                <label title="Mit"><input type="radio" name="mo" value="Mit"><div class="tile"><span class="symbol">➕</span></div></label>
-                                <label title="Ohne"><input type="radio" name="mo" value="Ohne"><div class="tile"><span class="symbol">➖</span></div></label>
+                                <label title="Mit">
+                                    <input type="radio" name="mo" value="Mit">
+                                    <div class="tile"><span class="symbol">➕</span></div>
+                                </label>
+                                <label title="Ohne">
+                                    <input type="radio" name="mo" value="Ohne">
+                                    <div class="tile"><span class="symbol">➖</span></div>
+                                </label>
                             </div>
                         </fieldset>
                         <fieldset style="flex:1">
                             <legend>Buben</legend>
                             <div class="tile-container">
-                                <label title="1"><input type="radio" name="f" value="1"><div class="tile"><span class="symbol">1</span></div></label>
-                                <label title="2"><input type="radio" name="f" value="2"><div class="tile"><span class="symbol">2</span></div></label>
-                                <label title="3"><input type="radio" name="f" value="3"><div class="tile"><span class="symbol">3</span></div></label>
-                                <label title="4"><input type="radio" name="f" value="4"><div class="tile"><span class="symbol">4</span></div></label>
+                                <label title="1">
+                                    <input type="radio" name="f" value="1">
+                                    <div class="tile"><span class="symbol">1</span></div>
+                                </label>
+                                <label title="2">
+                                    <input type="radio" name="f" value="2">
+                                    <div class="tile"><span class="symbol">2</span></div>
+                                </label>
+                                <label title="3">
+                                    <input type="radio" name="f" value="3">
+                                    <div class="tile"><span class="symbol">3</span></div>
+                                </label>
+                                <label title="4">
+                                    <input type="radio" name="f" value="4">
+                                    <div class="tile"><span class="symbol">4</span></div>
+                                </label>
 
                                 <label title="5-11">
                                     <input type="radio" name="f" value="dropdown">
@@ -178,31 +210,43 @@
                     <fieldset id="optsWrap">
                         <legend>Ansagen/Faktoren</legend>
                         <div class="tile-container" id="optTiles">
-                            <label title="Hand"><input type="checkbox" name="opt" value="Hand"><div class="tile"><span class="symbol">✋</span></div></label>
+                            <label title="Hand">
+                                <input type="checkbox" name="opt" value="Hand">
+                                <div class="tile"><span class="symbol">✋</span></div>
+                            </label>
 
-                            <label title="Schneider"><input type="checkbox" name="opt" value="Schneider">
+                            <label title="Schneider">
+                                <input type="checkbox" name="opt" value="Schneider">
                                 <div class="tile-ansage"><span class="ansageLabel">30</span></div>
                             </label>
-                            <label title="Schneider angesagt"><input type="checkbox" name="opt" value="Schneider angesagt">
+                            <label title="Schneider angesagt">
+                                <input type="checkbox" name="opt" value="Schneider angesagt">
                                 <div class="tile-ansage">
                                     <span class="ansageLabel">30</span><span class="overlayIcons">📢</span>
                                 </div>
                             </label>
 
-                            <label title="Schwarz"><input type="checkbox" name="opt" value="Schwarz">
-                                <div class="tile-ansage"><span class="ansageLabel">⬛</span></div></label>
-
-                            <label title="Schwarz angesagt"><input type="checkbox" name="opt" value="Schwarz angesagt">
-                                <div class="tile-ansage"><span class="ansageLabel">⬛</span><span class="overlayIcons">📢</span></div>
+                            <label title="Schwarz">
+                                <input type="checkbox" name="opt" value="Schwarz">
+                                <div class="tile-ansage"><span class="ansageLabel">⬛</span></div>
                             </label>
 
-                            <label title="Offen"><input type="checkbox" name="opt" value="Ouvert">
+                            <label title="Schwarz angesagt">
+                                <input type="checkbox" name="opt" value="Schwarz angesagt">
+                                <div class="tile-ansage">
+                                    <span class="ansageLabel">⬛</span><span class="overlayIcons">📢</span>
+                                </div>
+                            </label>
+
+                            <label title="Offen">
+                                <input type="checkbox" name="opt" value="Ouvert">
                                 <div class="tile-ansage"><span class="ansageLabel">👁️</span></div>
                             </label>
                         </div>
                     </fieldset>
                 </div>
-                <!-- ERGEBNIS – ganz unten -->
+
+                <!-- ERGEBNIS + AKTIONEN (gemeinsame Kachel rechts) -->
                 <div class="card" id="cardErgebnis">
                     <h2>Ergebnis</h2>
 
@@ -223,26 +267,23 @@
                         </button>
 
                     </div>
-                </div>
 
-                <!-- AKTIONEN -->
-                <div class="card" id="cardAktion">
-                    <h2>Aktion</h2>
-                   
-                    
-                    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-
-                        <button id="saveEdit" class="big-button primary" style="display:none">Änderung speichern</button>
-                        <button id="cancelEdit" class="big-button" style="display:none">Abbrechen</button>
+                    <!-- Aktionen in derselben Karte, unten ausgerichtet (per CSS) -->
+                    <div class="aktion-block">
+                        <button id="saveEdit" class="big-button primary" style="display:none">
+                            Änderung speichern
+                        </button>
+                        <button id="cancelEdit" class="big-button" style="display:none">
+                            Abbrechen
+                        </button>
 
                         <button id="undo" class="big-button">Undo</button>
                         <button id="export" class="big-button">CSV exportieren</button>
                         <button id="abort" class="big-button danger">Liste abbrechen</button>
                     </div>
+
                     <div style="margin-top:10px;font-size:.9rem" id="summary"></div>
                 </div>
-
-
 
             </div>
 
