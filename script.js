@@ -52,6 +52,23 @@
 
 const TERMINE_API_URL = 'https://script.google.com/macros/s/AKfycbxbXQTF5YEWCu8QSpSKag7regDQFxzzVR7_sakmAobusDIyeecwxEWMWhQrnLuPZXY/exec';
 
+// Hilfsfunktion: dd.MM.yyyy -> Date-Objekt
+function parseGermanDate(dateStr) {
+  if (!dateStr || typeof dateStr !== 'string') return null;
+  const parts = dateStr.split('.');
+  if (parts.length !== 3) return null;
+
+  const [dayStr, monthStr, yearStr] = parts;
+  const day = Number(dayStr);
+  const month = Number(monthStr);
+  const year = Number(yearStr);
+
+  if (!day || !month || !year) return null;
+
+  // Monat: 0-basiert
+  return new Date(year, month - 1, day);
+}
+
 async function loadTermine() {
   try {
     const response = await fetch(TERMINE_API_URL);
@@ -61,10 +78,11 @@ async function loadTermine() {
 
     const termine = await response.json();
 
-    // nach Datum sortieren
+    // nach Datum sortieren (dd.MM.yyyy)
     termine.sort((a, b) => {
-      const da = new Date(a.datum);
-      const db = new Date(b.datum);
+      const da = parseGermanDate(a.datum);
+      const db = parseGermanDate(b.datum);
+      if (!da || !db) return 0;
       return da - db;
     });
 
@@ -101,6 +119,7 @@ async function loadTermine() {
 document.addEventListener('DOMContentLoaded', () => {
   loadTermine();
 });
+
 
   // Schließe das Modal beim Klicken außerhalb des Modal-Inhalts
   window.addEventListener('click', (event) => {
