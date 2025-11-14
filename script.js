@@ -50,6 +50,58 @@
     clearLoginForm();
   });
 
+const TERMINE_API_URL = 'https://script.google.com/macros/s/AKfycbxbXQTF5YEWCu8QSpSKag7regDQFxzzVR7_sakmAobusDIyeecwxEWMWhQrnLuPZXY/exec';
+
+async function loadTermine() {
+  try {
+    const response = await fetch(TERMINE_API_URL);
+    if (!response.ok) {
+      throw new Error('HTTP-Fehler ' + response.status);
+    }
+
+    const termine = await response.json();
+
+    // nach Datum sortieren
+    termine.sort((a, b) => {
+      const da = new Date(a.datum);
+      const db = new Date(b.datum);
+      return da - db;
+    });
+
+    const container = document.getElementById('termine-container');
+    container.innerHTML = ''; // sicherheitshalber leeren
+
+    if (!termine.length) {
+      container.textContent = 'Aktuell sind keine Termine eingetragen.';
+      return;
+    }
+
+    termine.forEach(t => {
+      const p = document.createElement('p');
+
+      const titel = t.titel || 'Termin';
+      const datum = t.datum || '';
+      const uhrzeit = t.uhrzeit ? `, ${t.uhrzeit} Uhr` : '';
+      const ort = t.ort ? ` im "${t.ort}"` : '';
+      const info = t.info ? ` – ${t.info}` : '';
+
+      p.innerHTML = `<b>${titel}</b> - ${datum}${uhrzeit}${ort}${info}`;
+      container.appendChild(p);
+    });
+
+  } catch (err) {
+    console.error('Fehler beim Laden der Termine:', err);
+    const container = document.getElementById('termine-container');
+    if (container) {
+      container.textContent = 'Fehler beim Laden der Termine.';
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadTermine();
+});
+
   // Schließe das Modal beim Klicken außerhalb des Modal-Inhalts
   window.addEventListener('click', (event) => {
     if (event.target == modal) {
