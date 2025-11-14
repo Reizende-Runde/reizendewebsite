@@ -100,7 +100,7 @@ async function loadTermine() {
       const titel = t.titel || 'Termin';
       const datum = t.datum || '';
       const uhrzeit = t.uhrzeit ? `, ${t.uhrzeit} Uhr` : '';
-      const ort = t.ort ? ` im "${t.ort}"` : '';
+      const ort = t.ort ? ` "${t.ort}"` : '';
       const info = t.info ? ` – ${t.info}` : '';
 
       p.innerHTML = `<b>${titel}</b> - ${datum}${uhrzeit}${ort}${info}`;
