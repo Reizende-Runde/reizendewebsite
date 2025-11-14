@@ -51,6 +51,7 @@
   });
 
 const TERMINE_API_URL = 'https://script.google.com/macros/s/AKfycbxbXQTF5YEWCu8QSpSKag7regDQFxzzVR7_sakmAobusDIyeecwxEWMWhQrnLuPZXY/exec';
+const AKTUELLES_API_URL = TERMINE_API_URL + '?sheet=Aktuelles';
 
 // Hilfsfunktion: dd.MM.yyyy -> Date-Objekt
 function parseGermanDate(dateStr) {
@@ -78,16 +79,18 @@ async function loadTermine() {
 
     const termine = await response.json();
 
-    // nach Datum sortieren (dd.MM.yyyy)
+    const container = document.getElementById('termine-container');
+    if (!container) return;
+
+    container.innerHTML = ''; // entfernt Ladeplatzhalter
+
+    // nach Datum sortieren (dd.MM.yyyy), neueste zuerst
     termine.sort((a, b) => {
       const da = parseGermanDate(a.datum);
       const db = parseGermanDate(b.datum);
       if (!da || !db) return 0;
-      return da - db;
+      return db - da; // descending
     });
-
-    const container = document.getElementById('termine-container');
-    container.innerHTML = ''; // sicherheitshalber leeren
 
     if (!termine.length) {
       container.textContent = 'Aktuell sind keine Termine eingetragen.';
@@ -100,7 +103,7 @@ async function loadTermine() {
       const titel = t.titel || 'Termin';
       const datum = t.datum || '';
       const uhrzeit = t.uhrzeit ? `, ${t.uhrzeit} Uhr` : '';
-      const ort = t.ort ? ` "${t.ort}"` : '';
+      const ort = t.ort ? ` ${t.ort}` : '';
       const info = t.info ? ` – ${t.info}` : '';
 
       p.innerHTML = `<b>${titel}</b> - ${datum}${uhrzeit}${ort}${info}`;
@@ -116,9 +119,77 @@ async function loadTermine() {
   }
 }
 
+async function loadAktuelles() {
+  try {
+    const response = await fetch(AKTUELLES_API_URL);
+    if (!response.ok) {
+      throw new Error('HTTP-Fehler ' + response.status);
+    }
+
+    const news = await response.json();
+
+    const container = document.getElementById('aktuelles-container');
+    if (!container) return;
+
+    container.innerHTML = ''; // entfernt Ladeplatzhalter
+
+    // nach Datum DESC (neueste zuerst)
+    news.sort((a, b) => {
+      const da = parseGermanDate(a.datum);
+      const db = parseGermanDate(b.datum);
+      if (!da || !db) return 0;
+      return db - da; // DESC
+    });
+
+    if (!news.length) {
+      const p = document.createElement('p');
+      p.textContent = 'Aktuell gibt es keine Neuigkeiten.';
+      container.appendChild(p);
+      return;
+    }
+
+    news.forEach(n => {
+      const item = document.createElement('div');
+      item.classList.add('news-item');
+
+      const title = n.titel || 'Aktuelle Meldung';
+      const text = n.text || '';
+      const h3 = document.createElement('h3');
+      h3.textContent = title;
+
+      const p = document.createElement('p');
+      p.textContent = text;
+
+      // neues Datum-Element: klein, grau, kursiv
+      const dateEl = document.createElement('div');
+      dateEl.classList.add('news-date');
+      dateEl.textContent = n.datum ? n.datum : '';
+
+      item.appendChild(h3);
+      item.appendChild(p);
+      item.appendChild(dateEl);
+
+
+      container.appendChild(item);
+    });
+
+  } catch (err) {
+    console.error('Fehler beim Laden von Aktuelles:', err);
+    const container = document.getElementById('aktuelles-container');
+    if (container) {
+      container.textContent = 'Fehler beim Laden der aktuellen Meldungen.';
+    }
+  }
+}
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
+  loadAktuelles();
   loadTermine();
+  
 });
+
 
 
   // Schließe das Modal beim Klicken außerhalb des Modal-Inhalts
