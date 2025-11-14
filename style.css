@@ -281,7 +281,23 @@
     margin-bottom: 0.5rem;
     color: #b21f2d;
   }
-  
+  .loading-placeholder {
+  text-align: center;     /* Text mittig */
+  width: 100%;            /* Element über die volle Breite */
+  display: block;
+  padding: 10px 0;
+  opacity: 0.7;           /* optional: etwas ausgegraut */
+  font-style: italic;     /* optional */
+}
+.news-date {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #555;
+  opacity: 0.8;
+  margin-top: 6px;
+}
+
+
   /* ---------------------------------------- */
   /* Weitere Sektionen (Termine, Mitglied, Kontakt) */
   /* ---------------------------------------- */
