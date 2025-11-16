@@ -81,19 +81,41 @@
 
         <!-- Setup -->
         <section class="card" id="setup">
-            <h2>Spieler anlegen</h2>
-            <div class="row">
-                <div><input class="select" id="p1" placeholder="Spielerin 1"></div>
-                <div><input class="select" id="p2" placeholder="Spielerin 2"></div>
-                <div><input class="select" id="p3" placeholder="Spielerin 3"></div>
-                <div id="p4wrap" style="display:none"><input class="select" id="p4" placeholder="Spielerin 4"></div>
-            </div>
-            <div class="row">
-                <label><input type="checkbox" id="use4"> 4 Spielerinnen</label>
-                <!-- Modus-Auswahl ausgeblendet, ESF ist implizit -->
-                <button class="big-button primary" id="start">Liste starten</button>
-            </div>
-        </section>
+    <h2>Spieler:innen anlegen</h2>
+    <p class="setup-hint">
+        Trage die Namen der Spieler:innen ein und wähle, ob ihr zu dritt oder zu viert spielt.
+    </p>
+
+    <div class="setup-grid">
+        <div class="player-slot">
+            <div class="player-label">1</div>
+            <input class="select" id="p1" placeholder="Spielerin 1">
+        </div>
+        <div class="player-slot">
+            <div class="player-label">2</div>
+            <input class="select" id="p2" placeholder="Spielerin 2">
+        </div>
+        <div class="player-slot">
+            <div class="player-label">3</div>
+            <input class="select" id="p3" placeholder="Spielerin 3">
+        </div>
+        <div class="player-slot player-slot-4" id="p4wrap" style="display:none">
+            <div class="player-label">4</div>
+            <input class="select" id="p4" placeholder="Spielerin 4">
+        </div>
+    </div>
+
+    <div class="setup-footer">
+        <div class="player-count-toggle">
+            <span class="toggle-label">Anzahl Spieler:innen</span>
+            <button type="button" class="toggle-pill active" data-count="3">3</button>
+            <button type="button" class="toggle-pill" data-count="4">4</button>
+        </div>
+
+        <button class="big-button primary" id="start">Liste starten</button>
+    </div>
+</section>
+
 
         <!-- Laufender Betrieb -->
         <section id="running" style="display:none">

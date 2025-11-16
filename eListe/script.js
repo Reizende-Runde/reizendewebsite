@@ -19,6 +19,24 @@ function isNullGame(art) { return NULLS.includes(art); }
 function currentGameNumber() { return (S.rounds?.length || 0) + 1; }
 function dealerIdxForGame(gameNumber, n) { return (gameNumber - 1) % n; }
 function sitterIdxForGame(gameNumber, n) { return n === 4 ? dealerIdxForGame(gameNumber, n) : null; }
+function getPlayerCount() {
+    const active = document.querySelector('.toggle-pill.active');
+    const count = active?.dataset.count || '3';
+    return parseInt(count, 10);
+}
+
+function applyPlayerCountUI(count) {
+    const use4 = count === 4;
+    const p4wrap = $('#p4wrap');
+    if (p4wrap) p4wrap.style.display = use4 ? '' : 'none';
+
+    const pills = $$('.toggle-pill');
+    pills.forEach(p => {
+        const c = parseInt(p.dataset.count, 10);
+        p.classList.toggle('active', c === count);
+    });
+}
+
 function getSelectedSoloIdx() {
     const checked = document.querySelector('input[name="solo"]:checked');
     return checked ? parseInt(checked.value, 10) : null;
@@ -219,22 +237,24 @@ function renderSoloTiles() {
 /* ===== State ===== */
 let S = initialState();
 
-/* Setup */
-$('#use4').addEventListener('change', e => {
-    $('#p4wrap').style.display = e.target.checked ? '' : 'none';
-});
 $('#start').addEventListener('click', () => {
     const p1 = $('#p1').value?.trim() || 'Spielerin 1';
     const p2 = $('#p2').value?.trim() || 'Spielerin 2';
     const p3 = $('#p3').value?.trim() || 'Spielerin 3';
-    const use4 = $('#use4').checked;
+
+    const count = getPlayerCount();
+    const use4 = count === 4;
     const p4 = use4 ? ($('#p4').value?.trim() || 'Spielerin 4') : null;
+
     S.players = use4 ? [p1, p2, p3, p4] : [p1, p2, p3];
     S.mode = 'esf';
     S.use4 = use4;
+
     initRunning();
     save();
 });
+
+
 
 /* Zustand lesen */
 function readState() {
@@ -568,14 +588,12 @@ function abortList(e) {
     $('#p1').value = '';
     $('#p2').value = '';
     $('#p3').value = '';
-    $('#use4').checked = false;
-    $('#p4wrap').style.display = 'none';
     $('#p4').value = '';
 
-const soloTiles = $('#soloTiles');
-if (soloTiles) soloTiles.innerHTML = '';
+    const soloTiles = $('#soloTiles');
+    if (soloTiles) soloTiles.innerHTML = '';
 
-const statsWrap = $('#statsWrap');
+    const statsWrap = $('#statsWrap');
 
     if (statsWrap) {
         statsWrap.style.display = 'none';
@@ -592,6 +610,7 @@ const statsWrap = $('#statsWrap');
     // UI-Zustand an den neuen State (leere Spieler) anpassen
     applyClosedUI();
     updateMeta();
+    applyPlayerCountUI(3);
 
     toast('Liste beendet. Neue Spielerliste anlegen.');
 }
@@ -1080,6 +1099,17 @@ function initRunning() {
     $('#setup').style.display = 'none';
     $('#running').style.display = '';
     $('#metaBar').style.display = '';
+    // Spieleranzahl-UI an aktuellen State anpassen
+    applyPlayerCountUI(S.players.length === 4 ? 4 : 3);
+
+    // Toggle-Buttons (nur im Setup sichtbar, aber Event-Listener können immer existieren)
+    const pills = $$('.toggle-pill');
+    pills.forEach(p => {
+        p.addEventListener('click', () => {
+            const count = parseInt(p.dataset.count, 10) || 3;
+            applyPlayerCountUI(count);
+        });
+    });
 
 // Solo-Tiles für Alleinspieler:innen aufbauen
 renderSoloTiles();
@@ -1154,11 +1184,14 @@ function save() { localStorage.setItem('skat_list_state', JSON.stringify(S)); }
         $('#p1').value = S.players[0] || '';
         $('#p2').value = S.players[1] || '';
         $('#p3').value = S.players[2] || '';
-        if (S.players.length === 4) {
-            $('#use4').checked = true;
-            $('#p4wrap').style.display = '';
-            $('#p4').value = S.players[3] || '';
-        }
+                    if (S.players.length === 4) {
+                $('#p4wrap').style.display = '';
+                $('#p4').value = S.players[3] || '';
+                applyPlayerCountUI(4);
+            } else {
+                applyPlayerCountUI(3);
+            }
+
         // Modus ist implizit ESF, kein DOM-Element mehr nötig
         initRunning();
     } catch (e) { }
