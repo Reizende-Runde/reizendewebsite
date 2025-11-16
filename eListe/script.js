@@ -3,12 +3,26 @@ const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const NULLS = ['Null', 'Null Hand', 'Null Hand Ouvert', 'Null Ouvert'];
 const BASES = { Karo: 9, Herz: 10, Pik: 11, Kreuz: 12, Grand: 24 };
-const initialState = () => ({ players: [], mode: 'esf', use4: false, rounds: [], editIdx: null });
+const initialState = () => ({
+    players: [],
+    mode: 'esf',
+    use4: false,
+    rounds: [],
+    editIdx: null,
+    closed: false,
+    showESF: false          // neu: ESF-Anzeige an/aus
+});
+
+
 
 function isNullGame(art) { return NULLS.includes(art); }
 function currentGameNumber() { return (S.rounds?.length || 0) + 1; }
 function dealerIdxForGame(gameNumber, n) { return (gameNumber - 1) % n; }
 function sitterIdxForGame(gameNumber, n) { return n === 4 ? dealerIdxForGame(gameNumber, n) : null; }
+function getSelectedSoloIdx() {
+    const checked = document.querySelector('input[name="solo"]:checked');
+    return checked ? parseInt(checked.value, 10) : null;
+}
 
 /* Optionen-Kaskade */
 function wireOptionCascade() {
@@ -84,32 +98,71 @@ function computeGameValue(state) {
     let maxF = mult * (sign === -2 ? -2 : 1);
     return { value: v, base, maxF, summary: buildSummary(state, base, maxF) };
 }
+function computeGameValueForResult(baseState, res) {
+    const { art, mo, f, opts } = baseState;
+    if (!art) return { value: 0, base: 0, maxF: 0 };
+
+    const sign = res === 'Gewonnen' ? 1 : -2;
+
+    if (isNullGame(art)) {
+        const base =
+            art === 'Null' ? 23 :
+            art === 'Null Hand' ? 35 :
+            art === 'Null Ouvert' ? 46 : 59;
+        return { value: base * sign, base, maxF: sign };
+    }
+
+    const base = BASES[art] || 0;
+    let faktor = 0;
+    if (f && f !== 'dropdown') faktor = parseInt(f, 10) || 0;
+    if (f === 'dropdown') {
+        const d = $('#fDrop')?.value;
+        if (d) faktor = parseInt(d, 10) || 0;
+    }
+
+    const mult = (faktor || 0) + 1 + (opts ? opts.length : 0);
+    const v = base * mult * sign;
+    const maxF = mult * (sign === -2 ? -2 : 1);
+
+    return { value: v, base, maxF };
+}
 
 /* Bei 4-Spieler-Liste: Geber kann nicht Alleinspielerin sein */
+/* Bei 4-Spieler-Liste: Geber kann nicht Alleinspielerin sein */
 function enforceSoloNotDealer() {
-    const sel = $('#solo');
-    if (!sel || !S.players.length) return;
-
+    const radios = $$('input[name="solo"]');
     const n = S.players.length;
+    if (!radios.length || !n) return;
 
-    // Nur bei 4 Spielerinnen einschränken
+    // Bei 3 Spieler:innen keine Einschränkung
     if (n !== 4) {
-        Array.from(sel.options).forEach(o => o.disabled = false);
+        radios.forEach(r => {
+            r.disabled = false;
+            const lab = r.closest('label');
+            if (lab) lab.classList.remove('disabled');
+        });
         return;
     }
 
     const game = currentGameNumber();
     const dealerIdx = dealerIdxForGame(game, n);
 
-    Array.from(sel.options).forEach((opt, idx) => {
-        opt.disabled = (idx === dealerIdx);
+    radios.forEach((r, idx) => {
+        const isDealer = (idx === dealerIdx);
+        r.disabled = isDealer;
+        const lab = r.closest('label');
+        if (lab) lab.classList.toggle('disabled', isDealer);
     });
 
     // Falls aktuell der Geber ausgewählt war → auf nächste Spielerin springen
-    if (sel.selectedIndex === dealerIdx) {
-        sel.selectedIndex = (dealerIdx + 1) % n;
+    const checked = document.querySelector('input[name="solo"]:checked');
+    if (checked && parseInt(checked.value, 10) === dealerIdx) {
+        const nextIdx = (dealerIdx + 1) % n;
+        const nextRadio = document.querySelector(`input[name="solo"][value="${nextIdx}"]`);
+        if (nextRadio && !nextRadio.disabled) nextRadio.checked = true;
     }
 }
+
 
 
 function buildSummary(state, base, maxFshown) {
@@ -132,23 +185,36 @@ function buildSummary(state, base, maxFshown) {
 }
 
 /* ESF-Verteilung */
+/* Basis-Verteilung:
+   In den Runden / in der Liste wird nur noch der "nackte" Spielwert
+   (inkl. -2 bei Verlust) verbucht – ausschließlich auf die Alleinspielerin.
+   ESF-Zuschläge (+50/-50, Gegnerspiel 40/30) kommen nur in der Abschluss-Statistik dazu. */
 function distributeESF(value, players, soloIdx, sitterIdx, res) {
     const n = players.length;
     const delta = Array(n).fill(0);
 
-    if (res === 'Gewonnen') {
-        delta[soloIdx] += value + 50;
-        return delta;
+    if (soloIdx != null) {
+        delta[soloIdx] += value;
     }
-    delta[soloIdx] += value - 50;
-    if (n === 3) {
-        for (let i = 0; i < 3; i++) { if (i !== soloIdx) delta[i] += 40; }
-    } else if (n === 4) {
-        for (let i = 0; i < 4; i++) { if (i !== soloIdx && i !== sitterIdx) delta[i] += 30; }
-        if (sitterIdx != null) delta[sitterIdx] += 30;
-    }
+
     return delta;
 }
+function renderSoloTiles() {
+    const wrap = $('#soloTiles');
+    if (!wrap) return;
+    if (!S.players || !S.players.length) {
+        wrap.innerHTML = '';
+        return;
+    }
+
+    wrap.innerHTML = S.players.map((name, idx) => `
+        <label class="solo-tile-label">
+            <input type="radio" name="solo" value="${idx}">
+            <div class="solo-tile">${escapeHtml(name)}</div>
+        </label>
+    `).join('');
+}
+
 
 /* ===== State ===== */
 let S = initialState();
@@ -177,7 +243,7 @@ function readState() {
     const mo = (document.querySelector('input[name="mo"]:checked') || {}).value || '';
     const f = (document.querySelector('input[name="f"]:checked') || {}).value || '';
     const opts = $$('input[name="opt"]:checked').map(x => x.value);
-    const soloIdx = parseInt($('#solo').value || '0', 10);
+    const soloIdx = getSelectedSoloIdx();
     const n = S.players.length;
     const g = currentGameNumber();
     const sitterIdx = sitterIdxForGame(g, n);
@@ -190,7 +256,10 @@ function clearCurrentForm() {
     $$('input[name="res"]').forEach(e => e.checked = false);
     $$('input[name="mo"]').forEach(e => e.checked = false);
     $$('input[name="f"]').forEach(e => e.checked = false);
-    const fDrop = $('#fDrop'); if (fDrop) fDrop.value = '';
+
+    const fDrop = $('#fDrop');
+    if (fDrop) fDrop.value = '';
+
     $$('input[name="opt"]').forEach(e => e.checked = false);
 
     // Reaktivieren nach Null-Spiel
@@ -204,16 +273,131 @@ function clearCurrentForm() {
         const lab = el.closest('label');
         if (lab) lab.classList.remove('disabled');
     });
+
     if (fDrop) {
         fDrop.disabled = false;
         const lab = fDrop.closest('label');
         if (lab) lab.classList.remove('disabled');
     }
 
-    $('#valuePreview').className = 'badge';
-    $('#valuePreview').textContent = 'Spielwert: 0';
-    $('#summary').textContent = '';
+    const vp = $('#valuePreview');
+    if (vp) {
+        vp.className = 'badge';
+        vp.textContent = 'Spielwert: 0';
+    }
+
+    const summaryEl = $('#summary');
+    if (summaryEl) {
+        summaryEl.textContent = '';
+    }
+
+    // Ergebnis-Preview-Tiles leeren + Auswahlfarben zurücksetzen
+    const winSpan = $('#resWinValue');
+    const loseSpan = $('#resLoseValue');
+    if (winSpan) winSpan.textContent = '';
+    if (loseSpan) loseSpan.textContent = '';
+
+    const winTile = document.querySelector('.result-tile-win');
+    const loseTile = document.querySelector('.result-tile-lose');
+    if (winTile) winTile.classList.remove('selected');
+    if (loseTile) loseTile.classList.remove('selected');
 }
+
+
+function isValidForPreview(st) {
+    if (!S.players.length) return false;
+
+    // Solo muss gewählt sein
+// Solo muss gewählt sein
+    const soloIdx = getSelectedSoloIdx();
+    if (soloIdx == null) return false;
+
+
+    // Spielart muss gewählt sein
+    if (!st.art) return false;
+
+    // Null-Spiele: sonst nichts nötig
+    if (isNullGame(st.art)) return true;
+
+    // Farb-/Grand: Mit/Ohne + Buben müssen gültig sein
+    if (!st.mo) return false;
+    if (!st.f) return false;
+    if (st.f === 'dropdown') {
+        const d = $('#fDrop')?.value;
+        if (!d) return false;
+    }
+    return true;
+}
+function preview() {
+    const st = readState();
+
+    const winSpan = $('#resWinValue');
+    const loseSpan = $('#resLoseValue');
+    const vp = $('#valuePreview');
+    const summaryEl = $('#summary');
+
+    // Farbliches Markieren der ausgewählten Ergebnis-Tiles
+    const winInput = document.querySelector('input[name="res"][value="Gewonnen"]');
+    const loseInput = document.querySelector('input[name="res"][value="Verloren"]');
+    const winTile = document.querySelector('.result-tile-win');
+    const loseTile = document.querySelector('.result-tile-lose');
+
+    if (winTile && winInput) {
+        winTile.classList.toggle('selected', winInput.checked);
+    }
+    if (loseTile && loseInput) {
+        loseTile.classList.toggle('selected', loseInput.checked);
+    }
+
+    // Wenn Auswahl noch nicht valide → alles leer lassen
+    if (!isValidForPreview(st)) {
+        if (winSpan) winSpan.textContent = '';
+        if (loseSpan) loseSpan.textContent = '';
+
+        if (vp) {
+            vp.className = 'badge';
+            vp.textContent = 'Spielwert: 0';
+        }
+        if (summaryEl) {
+            summaryEl.innerHTML = '';
+        }
+        return;
+    }
+
+    // Ab hier: valide Auswahl -> Werte berechnen
+    const baseState = { ...st, res: '' };
+    const winCalc = computeGameValueForResult(baseState, 'Gewonnen');
+    const loseCalc = computeGameValueForResult(baseState, 'Verloren');
+
+    if (winSpan) {
+        const v = winCalc.value || 0;
+        const sign = v > 0 ? '+' : (v < 0 ? '-' : '');
+        winSpan.textContent = sign ? `${sign}${Math.abs(v)}` : `${v}`;
+    }
+
+    if (loseSpan) {
+        const v = loseCalc.value || 0;
+        // Verlustwerte sind in der Regel negativ
+        const sign = v > 0 ? '+' : (v < 0 ? '-' : '');
+        loseSpan.textContent = sign ? `${sign}${Math.abs(v)}` : `${v}`;
+    }
+
+    // Badge + Summary für den tatsächlich gewählten Status (falls Ergebnis schon gewählt)
+    const calcActual = computeGameValue(st);
+    if (vp) {
+        let cls = 'badge';
+        if (calcActual.value > 0) cls += ' ok';
+        else if (calcActual.value < 0) cls += ' bad';
+        vp.className = cls;
+        vp.textContent = `Spielwert: ${calcActual.value || 0}`;
+    }
+
+    if (summaryEl) {
+        summaryEl.innerHTML = calcActual.summary || '';
+    }
+}
+
+
 
 /* Toasts */
 let toastTimer = null;
@@ -341,7 +525,7 @@ function addPassed(e) {
         state: { art: '', res: '', mo: '', f: '', opts: [] },
         value: 0, base: 0, mo: '', factor: 0, opts: [],
         delta,
-        soloIdx: parseInt($('#solo').value || '0', 10),
+        soloIdx: (getSelectedSoloIdx() ?? 0),
         sitterIdx,
         totals, wins, losses,
         summary: 'Eingepasst'
@@ -364,8 +548,14 @@ function undo() {
 }
 
 /* Liste abbrechen */
-function abortList() {
-    if (!confirm('Liste abbrechen und alles löschen?')) return;
+/* Liste abbrechen / beenden */
+/* Liste abbrechen / beenden – immer mit Bestätigung */
+function abortList(e) {
+    if (e && e.preventDefault) e.preventDefault();
+
+    if (!confirm('Liste abbrechen und alles löschen?')) {
+        return;
+    }
 
     localStorage.removeItem('skat_list_state');
     S = initialState();
@@ -382,37 +572,116 @@ function abortList() {
     $('#p4wrap').style.display = 'none';
     $('#p4').value = '';
 
-    $('#solo').innerHTML = '';
+const soloTiles = $('#soloTiles');
+if (soloTiles) soloTiles.innerHTML = '';
+
+const statsWrap = $('#statsWrap');
+
+    if (statsWrap) {
+        statsWrap.style.display = 'none';
+        const statsTableWrap = $('#statsTableWrap');
+        if (statsTableWrap) statsTableWrap.innerHTML = '';
+    }
+
     clearCurrentForm();
 
-    toast('Liste abgebrochen. Neue Spielerliste anlegen.');
+    // Spieleranzeige und Layout zurücksetzen
+    const mini = $('#miniScores');
+    if (mini) mini.innerHTML = '';
+
+    // UI-Zustand an den neuen State (leere Spieler) anpassen
+    applyClosedUI();
+    updateMeta();
+
+    toast('Liste beendet. Neue Spielerliste anlegen.');
 }
 
+
+function reopenList() {
+    S.closed = false;
+    save();
+    applyClosedUI();
+    toast('Liste wieder geöffnet. Du kannst die Liste bearbeiten oder fortführen.');
+}
+
+
+function finishList() {
+    if (!S.rounds.length) {
+        alert('Es wurden noch keine Spiele eingetragen.');
+        return;
+    }
+    if (!confirm('Liste wirklich abschließen? Danach sind keine Änderungen mehr möglich.')) {
+        return;
+    }
+
+    S.closed = true;
+    S.editIdx = null;
+    save();
+
+    // Oberfläche auf "nur Tabelle + Stats" umschalten
+    renderTable();
+    renderStats();
+    applyClosedUI();
+
+    toast('Liste abgeschlossen.');
+}
+
+
 /* Spieler-Stats (Header) */
+/* Spieler-Stats (Header / Mini-Scores) */
 function computePlayerStats() {
     const n = S.players.length;
-    const stats = Array.from({ length: n }, () => ({ sum: 0, won: 0, lost: 0 }));
-    if (!S.rounds.length) return stats;
-    const last = S.rounds.at(-1);
-    last.totals.forEach((v, i) => stats[i].sum = v);
-    last.wins.forEach((v, i) => stats[i].won = v);
-    last.losses.forEach((v, i) => stats[i].lost = v);
+    const stats = Array.from({ length: n }, () => ({
+        baseSum: 0,   // Punkte ohne ESF-Zuschläge (so wie in der Liste summiert)
+        esfSum: 0,    // Punkte mit ESF-Zuschlägen
+        won: 0,
+        lost: 0
+    }));
+    if (!S.rounds.length || !n) return stats;
+
+    const last      = S.rounds.at(-1);
+    const baseTotals = (last.totals || Array(n).fill(0)).slice();
+    const wins       = (last.wins   || Array(n).fill(0)).slice();
+    const losses     = (last.losses || Array(n).fill(0)).slice();
+
+    const oppLossPts = (n === 3) ? 40 : 30;
+
+    // Gegnerspiele verloren = Anzahl Runden mit "Verloren", an denen Spieler nicht Solo war
+    const oppLostCount = Array(n).fill(0);
+    S.rounds.forEach(r => {
+        if (r.passed) return;
+        if (r.state?.res === 'Verloren' && r.soloIdx != null) {
+            for (let i = 0; i < n; i++) {
+                if (i !== r.soloIdx) oppLostCount[i] += 1;
+            }
+        }
+    });
+
+    const plus50 = wins.map((w, i) => (w - losses[i]) * 50);
+    const oppPts = oppLostCount.map(c => c * oppLossPts);
+    const esfTotals = baseTotals.map((v, i) => v + plus50[i] + oppPts[i]);
+
+    for (let i = 0; i < n; i++) {
+        stats[i].baseSum = baseTotals[i] || 0;
+        stats[i].esfSum  = esfTotals[i] || 0;
+        stats[i].won     = wins[i]      || 0;
+        stats[i].lost    = losses[i]    || 0;
+    }
     return stats;
 }
 
+
+/* Tabellen-Render inkl. Klick zum Editieren */
 /* Tabellen-Render inkl. Klick zum Editieren */
 function renderTable() {
     const tbl = $('#listTable');
-    const stats = computePlayerStats();
+    const stats = computePlayerStats(); // ggf. später noch nützlich
 
-    const playerHeads = S.players.map((p, i) => `
-    <th>
-      <div>${escapeHtml(p)}</div>
-      <div class="th-sub"><span class="numB">${stats[i]?.sum || 0}</span></div>
-      <div class="th-sub">gew.: ${stats[i]?.won || 0} &nbsp; verl.: ${stats[i]?.lost || 0}</div>
-      <div class="th-sub">Platz ${i + 1}</div>
-    </th>`).join('');
-
+    const playerHeads = S.players.map(p => `
+        <th>
+          <div>${escapeHtml(p)}</div>
+        </th>`).join('');
+    
     const head = `<thead>
     <tr>
       <th class="vhead">#</th>
@@ -428,13 +697,6 @@ function renderTable() {
       <th colspan="2">Spielwert</th>
       ${playerHeads}
       <th class="vhead">Eingepasst</th>
-    </tr>
-    <tr>
-      <th></th><th></th><th></th><th></th>
-      <th></th><th></th><th></th><th></th><th></th><th></th>
-      <th class="cell-center">+</th><th class="cell-center">−</th>
-      ${S.players.map(() => '<th></th>').join('')}
-      <th></th>
     </tr>
   </thead>`;
 
@@ -475,25 +737,103 @@ function renderTable() {
     }).join('');
 
     const totals = (S.rounds.at(-1)?.totals || Array(S.players.length).fill(0));
-    const preCols = Array(9).fill('<td></td>').join('');
+    const preCols = Array(9).fill('<td></td>').join(''); // Grundwert + 8 Optionsspalten
     const plusMinus = '<td></td><td></td>';
     const playerTotals = totals.map(v => `<td class="cell-right">${v > 0 ? '+' : ''}${v}</td>`).join('');
 
-    const foot = `<tfoot>
+    // Basis-Summenzeile (immer sichtbar)
+    let footRows = `
     <tr>
-      <td>Summe</td>
+      <td>Spielergebnis (ohne ESF-Zuschläge)</td>
       ${preCols}
       ${plusMinus}
       ${playerTotals}
       <td></td>
-    </tr>
-  </tfoot>`;
+    </tr>`;
+
+    // Erweiterte Statistik, sobald es mindestens eine Runde gibt
+    if (S.rounds.length) {
+        const n = S.players.length;
+        const last = S.rounds.at(-1);
+        const wins   = (last.wins   || Array(n).fill(0)).slice();
+        const losses = (last.losses || Array(n).fill(0)).slice();
+
+        const oppLossPts = (n === 3) ? 40 : 30;
+
+        const oppLostCount = Array(n).fill(0);
+        const oppWonCount  = Array(n).fill(0);
+        const passes       = Array(n).fill(0);
+
+        S.rounds.forEach(r => {
+            if (r.passed) {
+                if (r.soloIdx != null) passes[r.soloIdx] += 1;
+                return;
+            }
+            if (r.state?.res === 'Verloren' && r.soloIdx != null) {
+                // verlorene Gegenspiele (alle NICHT-Solo)
+                for (let i = 0; i < n; i++) {
+                    if (i !== r.soloIdx) oppLostCount[i] += 1;
+                }
+            }
+            if (r.state?.res === 'Gewonnen' && r.soloIdx != null) {
+                // gewonnene Gegenspiele (alle NICHT-Solo)
+                for (let i = 0; i < n; i++) {
+                    if (i !== r.soloIdx) oppWonCount[i] += 1;
+                }
+            }
+        });
+
+        const plus50 = wins.map((w, i) => (w - losses[i]) * 50);
+        const oppPts = oppLostCount.map(c => c * oppLossPts);
+        const finalTotals = totals.map((v, i) => v + plus50[i] + oppPts[i]);
+
+        const emptyMetrics = `<td colspan="11"></td>`; // 9 Optionsspalten + 2 Spielwertspalten
+
+        const rowCounts = (label, arr, extraClass = '') =>
+            `<tr class="${extraClass}">
+                <td>${label}</td>
+                ${emptyMetrics}
+                ${arr.map(v => `<td class="cell-right">${v}</td>`).join('')}
+                <td></td>
+            </tr>`;
+
+        const rowPoints = (label, arr, bold = false, extraClass = '') =>
+            `<tr class="${extraClass}">
+                <td>${bold ? '<b>' + label + '</b>' : label}</td>
+                ${emptyMetrics}
+                ${arr.map(v => {
+                    const sign = v > 0 ? '+' : (v < 0 ? '-' : '');
+                    const num = v === 0 ? '0' : sign + Math.abs(v);
+                    return `<td class="cell-right">${bold ? '<b>' + num + '</b>' : num}</td>`;
+                }).join('')}
+                <td></td>
+            </tr>`;
+
+        // erste Stats-Zeile mit Separator-Klasse für den Border
+        footRows +=
+            rowCounts('Gewonnene Spiele', wins, 'stats-separator') +
+            rowCounts('Verlorene Spiele', losses) +
+            rowCounts('Eingepasste Spiele', passes) +
+            rowCounts('Gewonnene Gegnerspiele', oppWonCount) +
+            rowPoints('+ (gewonnene − verlorene) Spiele × 50', plus50) +
+            rowPoints(`+ verlorene Gegnerspiele × ${oppLossPts}`, oppPts) +
+            rowPoints('Gesamtpunkte (mit ESF-Zuschlägen)', finalTotals, true);
+    }
+
+    const foot = `<tfoot>${footRows}</tfoot>`;
 
     tbl.innerHTML = head + '<tbody>' + rows + '</tbody>' + foot;
 }
 
+
+
+
+/* Edit starten (Row-Klick) */
 /* Edit starten (Row-Klick) */
 window.onRowEdit = function (i) {
+    // Wenn Liste abgeschlossen ist, keine Bearbeitung mehr zulassen
+    if (S.closed) return;
+
     const r = S.rounds[i];
     S.editIdx = i;
     setControlsFromState(r);
@@ -503,6 +843,7 @@ window.onRowEdit = function (i) {
     renderTable();
     toast(`Bearbeite Spiel ${i + 1}${r.passed ? ' (Eingepasst)' : ''}.`);
 };
+
 
 /* Formular aus Datensatz füllen */
 function setControlsFromState(r) {
@@ -515,7 +856,11 @@ function setControlsFromState(r) {
     if (!fVal && r.factor >= 5) { fVal = 'dropdown'; }
     fRadio.forEach(inpt => inpt.checked = inpt.value === fVal);
     if ($('#fDrop')) $('#fDrop').value = r.factor >= 5 ? String(r.factor) : '';
-    $('#solo').value = String(r.soloIdx ?? 0);
+const soloRadio = document.querySelector(`input[name="solo"][value="${r.soloIdx ?? 0}"]`);
+if (soloRadio && !soloRadio.disabled) {
+    soloRadio.checked = true;
+}
+
     preview();
 }
 
@@ -632,27 +977,47 @@ function exportCSV() {
 
 /* Meta + Info-Kachel */
 /* Meta + Spieler-Kachel */
+/* Meta + Spieler-Kachel */
 function updateMeta() {
-    const game = currentGameNumber();
-    const n = S.players.length || 3;
-    const round = Math.ceil(game / n);
-    const dealerIdx = dealerIdxForGame(game, n);
-
-    // Meta-Bar oben
-    $('#metaGame').textContent = String(game);
-    $('#metaRound').textContent = String(round);
-
-    // Mini-Scores-Kachel: Spielerinnen + Punkte
-    const stats = computePlayerStats();
+    const n = S.players.length;
     const wrap = $('#miniScores');
-    if (!stats.length) {
-        wrap.innerHTML = '';
+
+    // Keine Spieler → keine Meta-Infos anzeigen
+    if (!n) {
+        const mg = $('#metaGame');
+        const mr = $('#metaRound');
+        if (mg) mg.textContent = '';
+        if (mr) mr.textContent = '';
+        if (wrap) wrap.innerHTML = '';
         return;
     }
 
+    // Spiel- und Rundenzahl:
+    // - während die Liste läuft: nächstes Spiel (currentGameNumber)
+    // - wenn die Liste abgeschlossen ist: letztes gespieltes Spiel
+    let game;
+    if (S.closed && S.rounds.length) {
+        game = S.rounds.length;          // letztes eingetragenes Spiel
+    } else {
+        game = currentGameNumber();      // nächstes Spiel
+    }
+    const round = Math.ceil(game / n);
+    const dealerIdx = dealerIdxForGame(game, n);
+
+    const mg = $('#metaGame');
+    const mr = $('#metaRound');
+    if (mg) mg.textContent = String(game);
+    if (mr) mr.textContent = String(round);
+
+    // Spieler-Stats für Mini-Scores
+    const stats = computePlayerStats();
+    if (!stats.length || !wrap) return;
+
+    const useESF = !!S.showESF;
+
     wrap.innerHTML = S.players.map((p, i) => {
-        const s = stats[i] || { sum: 0, won: 0, lost: 0 };
-        const v = s.sum || 0;
+        const s = stats[i] || { baseSum: 0, esfSum: 0 };
+        const v = useESF ? s.esfSum : s.baseSum;
         const sign = v > 0 ? '+' : '';
         const dealerClass = (i === dealerIdx) ? ' dealer' : '';
         return `
@@ -662,8 +1027,52 @@ function updateMeta() {
             </div>
         `;
     }).join('');
+
     enforceSoloNotDealer();
 }
+
+
+
+
+function applyClosedUI() {
+    const hasPlayers = !!(S.players && S.players.length);
+    const isClosed = hasPlayers && !!S.closed;
+
+    // Setup-Block:
+    // - sichtbar, wenn keine Spieler vorhanden
+    // - ausgeblendet, sobald eine Liste läuft/gelaufen ist
+    const setup = $('#setup');
+    if (setup) setup.style.display = hasPlayers ? 'none' : '';
+
+    // Meta-Bar:
+    // - nur anzeigen, wenn es überhaupt eine (aktive oder abgeschlossene) Liste gibt
+    const metaBar = $('#metaBar');
+    if (metaBar) metaBar.style.display = hasPlayers ? '' : 'none';
+
+    // Spieler-Info-Karte:
+    // - ebenfalls nur, wenn eine Liste existiert
+    const cardInfo = $('#cardInfo');
+    if (cardInfo) cardInfo.style.display = hasPlayers ? '' : 'none';
+
+    // Oberer Grid-Bereich (Spielauswahl + Ergebnis/Aktionen):
+    // - nur sichtbar, wenn Liste aktiv ist (nicht geschlossen)
+    const gridUpper = $('.grid-upper');
+    if (gridUpper) gridUpper.style.display = (hasPlayers && !isClosed) ? '' : 'none';
+
+    // Stats-Bereich:
+    // - nur im abgeschlossenen Zustand sichtbar
+    const statsWrap = $('#statsWrap');
+    if (statsWrap) statsWrap.style.display = (hasPlayers && isClosed) ? '' : 'none';
+
+    // Final-Action-Buttons:
+    // - ebenfalls nur im abgeschlossenen Zustand
+    const finalActions = $('#finalActions');
+    if (finalActions) finalActions.style.display = (hasPlayers && isClosed) ? '' : 'none';
+}
+
+
+
+
 
 
 /* Init Laufbetrieb */
@@ -672,10 +1081,17 @@ function initRunning() {
     $('#running').style.display = '';
     $('#metaBar').style.display = '';
 
-    const soloSel = $('#solo'); soloSel.innerHTML = '';
-    S.players.forEach((n, i) => soloSel.add(new Option(n, String(i))));
+// Solo-Tiles für Alleinspieler:innen aufbauen
+renderSoloTiles();
+enforceSoloNotDealer();
 
-    enforceSoloNotDealer();
+// Falls noch niemand ausgewählt ist, erste nicht deaktivierte Spieler:in wählen
+let soloChecked = document.querySelector('input[name="solo"]:checked');
+if (!soloChecked) {
+    const first = document.querySelector('input[name="solo"]:not(:disabled)');
+    if (first) first.checked = true;
+}
+
     wireOptionCascade();
     wireFactorDropdown();
     enforceNullLock();
@@ -689,15 +1105,43 @@ function initRunning() {
     $('#undo').addEventListener('click', undo);
     $('#export').addEventListener('click', exportCSV);
     $('#abort').addEventListener('click', abortList);
+    $('#finish').addEventListener('click', finishList);
 
     // Edit-Buttons
     $('#saveEdit').addEventListener('click', saveEdit);
     $('#cancelEdit').addEventListener('click', cancelEdit);
 
+        // Buttons im Abschluss-Screen
+    const finalEnd = $('#finalEnd');
+    if (finalEnd) finalEnd.addEventListener('click', abortList);
+
+    const finalExport = $('#finalExport');
+    if (finalExport) finalExport.addEventListener('click', exportCSV);
+
+    const finalReopen = $('#finalReopen');
+    if (finalReopen) finalReopen.addEventListener('click', reopenList);
+
+
+    // ESF-Toggle
+    const esfToggle = $('#esfToggle');
+    if (esfToggle) {
+        esfToggle.classList.toggle('active', !!S.showESF);
+        esfToggle.addEventListener('click', () => {
+            S.showESF = !S.showESF;
+            esfToggle.classList.toggle('active', S.showESF);
+            save();
+            updateMeta();
+        });
+    }
+
     preview();
     renderTable();
     updateMeta();
+    applyClosedUI();
+    if (S.closed) renderStats();
 }
+
+
 
 /* Persistence */
 function save() { localStorage.setItem('skat_list_state', JSON.stringify(S)); }
@@ -707,18 +1151,22 @@ function save() { localStorage.setItem('skat_list_state', JSON.stringify(S)); }
         const s = JSON.parse(raw);
         if (!s.players?.length) return;
         S = { ...initialState(), ...s };
-        $('#p1').value = S.players[0] || ''; $('#p2').value = S.players[1] || ''; $('#p3').value = S.players[2] || '';
-        if (S.players.length === 4) { $('#use4').checked = true; $('#p4wrap').style.display = ''; $('#p4').value = S.players[3] || ''; }
-        $('#mode').value = 'esf';
+        $('#p1').value = S.players[0] || '';
+        $('#p2').value = S.players[1] || '';
+        $('#p3').value = S.players[2] || '';
+        if (S.players.length === 4) {
+            $('#use4').checked = true;
+            $('#p4wrap').style.display = '';
+            $('#p4').value = S.players[3] || '';
+        }
+        // Modus ist implizit ESF, kein DOM-Element mehr nötig
         initRunning();
     } catch (e) { }
 })();
+
 
 /* Utils */
 function escapeHtml(s) { return String(s || '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m])); }
 
 /* Placeholder für preview(), falls im ursprünglichen Code vorhanden */
-function preview() {
-    // Falls du vorher schon eine Preview-Implementierung hattest, hier wieder einsetzen.
-    // Wenn nicht, kannst du diese Funktion auch mit Logik füllen oder entfernen.
-}
+

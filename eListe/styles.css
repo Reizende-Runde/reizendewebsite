@@ -261,6 +261,28 @@ input:checked + .tile-ansage {
     color: var(--bad);
     border: 1px solid #f5c2c7;
 }
+/* Ergebnis-Tiles: Preview-Farben */
+.result-tile-win {
+    background: #7bd89d;        /* kräftigeres Grün */
+    border-color: #3aa55c;      /* dunkler Rahmen */
+    color: #075b2e;             /* satte Textfarbe */
+}
+
+.result-tile-lose {
+    background: #f7a7b1;        /* starkes, freundliches Rot */
+    border-color: #d35a6b;      /* dunkler Rahmen */
+    color: #6a0d1a;             /* satte Textfarbe */
+}
+
+
+
+
+/* Schrift im Ergebnis-Value */
+.result-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
 
 /* ----------------------------- */
 /*          TABLE STYLES         */
@@ -331,6 +353,11 @@ tr.editing {
 tr.clickable {
     cursor: pointer;
 }
+/* Trennlinie zwischen Listen-Teil und Abschluss-Statistik */
+.table tfoot tr.stats-separator td {
+    border-top: 2px solid #444; /* stärkerer Border als die normale Tabellenlinie */
+}
+
 
 /* ----------------------------- */
 /*   RUNDE & SPIELER – KACHEL    */
@@ -368,6 +395,85 @@ tr.clickable {
     border-color: #bfe8cd;
     color: #0e6b34;
 }
+
+/* Alleinspieler:innen als Tiles */
+.solo-tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.solo-tile-label {
+    flex: 1 1 80px;
+}
+
+.solo-tile {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: #f0f0f0;
+    border: 2px solid transparent;
+    min-height: 40px;
+    text-align: center;
+    font-weight: 600;
+    /* Textgröße passt sich an – kurze Namen größer, lange kleiner */
+    font-size: clamp(0.75rem, 2.4vw, 1rem);
+    word-break: break-word;
+}
+
+/* Solo-Radios selbst unsichtbar */
+input[name="solo"] {
+    display: none;
+}
+
+/* Selektierte Solo-Tile */
+input[name="solo"]:checked + .solo-tile {
+    border-color: var(--c1);
+    background: #d0e4ff;
+}
+
+/* Dealer / deaktivierte Solo-Tile (bei 4 Spieler:innen) */
+.solo-tile-label.disabled .solo-tile {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
+/* ESF-Toggle neben "Spieler:innen" */
+.esf-toggle {
+    margin-left: 8px;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: none;
+    background: transparent;
+    color: #777;
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.esf-toggle .esf-icon {
+    text-decoration: line-through; /* durchgestrichenes Auge im Default */
+    opacity: 0.5;
+}
+
+.esf-toggle .esf-label {
+    font-weight: 600;
+}
+
+.esf-toggle.active {
+    color: #0e6b34;
+}
+
+.esf-toggle.active .esf-icon {
+    text-decoration: none; /* Auge nicht mehr durchgestrichen */
+    opacity: 1;
+}
+
 
 /* Info-Grid (falls an anderer Stelle genutzt) */
 .info-grid {
@@ -597,4 +703,22 @@ tr.clickable {
 header {
     position: static !important;
     top: auto !important;
+}
+
+
+.final-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.final-actions .big-button {
+    flex: 1 1 180px;
+}
+
+@media (max-width: 600px) {
+    .final-actions .big-button {
+        width: 100%;
+        flex: 1 1 100%;
+    }
 }
