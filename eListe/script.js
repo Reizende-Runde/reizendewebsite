@@ -843,7 +843,7 @@ function renderTable() {
 
     tbl.innerHTML = head + '<tbody>' + rows + '</tbody>' + foot;
 }
-
+function renderStats() {}
 
 
 
@@ -1091,14 +1091,43 @@ function applyClosedUI() {
 
 
 
+function onEsfToggleClick() {
+    S.showESF = !S.showESF;
+
+    const esfToggle = $('#esfToggle');
+    if (esfToggle) {
+        esfToggle.classList.toggle('active', S.showESF);
+    }
+
+    save();
+    updateMeta();
+}
 
 
 
 /* Init Laufbetrieb */
+// außerhalb von initRunning definieren:
+function onEsfToggleClick() {
+    S.showESF = !S.showESF;
+
+    const esfToggle = $('#esfToggle');
+    if (esfToggle) {
+        esfToggle.classList.toggle('active', S.showESF);
+    }
+
+    save();
+    updateMeta();
+}
+
+
+// ------------------------
+// Init Laufbetrieb
+// ------------------------
 function initRunning() {
     $('#setup').style.display = 'none';
     $('#running').style.display = '';
     $('#metaBar').style.display = '';
+
     // Spieleranzahl-UI an aktuellen State anpassen
     applyPlayerCountUI(S.players.length === 4 ? 4 : 3);
 
@@ -1111,26 +1140,36 @@ function initRunning() {
         });
     });
 
-// Solo-Tiles für Alleinspieler:innen aufbauen
-renderSoloTiles();
-enforceSoloNotDealer();
+    // Solo-Tiles für Alleinspieler:innen aufbauen
+    renderSoloTiles();
+    enforceSoloNotDealer();
 
-// Falls noch niemand ausgewählt ist, erste nicht deaktivierte Spieler:in wählen
-let soloChecked = document.querySelector('input[name="solo"]:checked');
-if (!soloChecked) {
-    const first = document.querySelector('input[name="solo"]:not(:disabled)');
-    if (first) first.checked = true;
-}
+    // Falls noch niemand ausgewählt ist, erste nicht deaktivierte Spieler:in wählen
+    let soloChecked = document.querySelector('input[name="solo"]:checked');
+    if (!soloChecked) {
+        const first = document.querySelector('input[name="solo"]:not(:disabled)');
+        if (first) first.checked = true;
+    }
 
     wireOptionCascade();
     wireFactorDropdown();
     enforceNullLock();
 
-    $$('input[name="res"]').forEach(r => r.addEventListener('change', onResultSelected));
-    $$('input[name="art"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
-    $$('input[name="mo"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
-    $$('input[name="f"]').forEach(r => r.addEventListener('change', () => { preview(); updateMeta(); }));
+    // Ergebnis-Listener
+    $$('input[name="res"]').forEach(r =>
+        r.addEventListener('change', onResultSelected)
+    );
+    $$('input[name="art"]').forEach(r =>
+        r.addEventListener('change', () => { preview(); updateMeta(); })
+    );
+    $$('input[name="mo"]').forEach(r =>
+        r.addEventListener('change', () => { preview(); updateMeta(); })
+    );
+    $$('input[name="f"]').forEach(r =>
+        r.addEventListener('change', () => { preview(); updateMeta(); })
+    );
 
+    // Buttons im laufenden Betrieb
     $('#pass').addEventListener('click', addPassed);
     $('#undo').addEventListener('click', undo);
     $('#export').addEventListener('click', exportCSV);
@@ -1141,7 +1180,7 @@ if (!soloChecked) {
     $('#saveEdit').addEventListener('click', saveEdit);
     $('#cancelEdit').addEventListener('click', cancelEdit);
 
-        // Buttons im Abschluss-Screen
+    // Buttons im Abschluss-Screen
     const finalEnd = $('#finalEnd');
     if (finalEnd) finalEnd.addEventListener('click', abortList);
 
@@ -1151,17 +1190,15 @@ if (!soloChecked) {
     const finalReopen = $('#finalReopen');
     if (finalReopen) finalReopen.addEventListener('click', reopenList);
 
-
-    // ESF-Toggle
+    // ESF-Toggle (mit stabilem Handler, damit kein Doppelt-Toggle)
     const esfToggle = $('#esfToggle');
     if (esfToggle) {
+        // aktuellen Zustand visuell setzen
         esfToggle.classList.toggle('active', !!S.showESF);
-        esfToggle.addEventListener('click', () => {
-            S.showESF = !S.showESF;
-            esfToggle.classList.toggle('active', S.showESF);
-            save();
-            updateMeta();
-        });
+
+        // alten Handler (falls vorhanden) entfernen und neu registrieren
+        esfToggle.removeEventListener('click', onEsfToggleClick);
+        esfToggle.addEventListener('click', onEsfToggleClick);
     }
 
     preview();
@@ -1170,6 +1207,7 @@ if (!soloChecked) {
     applyClosedUI();
     if (S.closed) renderStats();
 }
+
 
 
 
