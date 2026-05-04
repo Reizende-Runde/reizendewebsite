@@ -258,6 +258,14 @@ input[type=text] {
     color: #fff;
 }
 
+.pill-position {
+    font-size: 0.7em;
+    font-weight: 700;
+    opacity: 0.7;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
 /* Mobile: Setup einspaltig */
 @media (max-width: 600px) {
     .setup-grid {
@@ -824,4 +832,35 @@ header {
         width: 100%;
         flex: 1 1 100%;
     }
+}
+
+/* ----------------------------- */
+/*       OPTIONEN-MENÜ           */
+/* ----------------------------- */
+
+.options-menu {
+    width: 100%;
+}
+
+.options-menu > summary {
+    list-style: none;
+    cursor: pointer;
+    text-align: center;
+}
+
+.options-menu > summary::-webkit-details-marker {
+    display: none;
+}
+
+.options-menu-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+/* Tabellenzeile nur ausgewählt, aber noch nicht im Bearbeitungsmodus */
+#listTable tr.selected {
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
 }
