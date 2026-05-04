@@ -145,6 +145,7 @@ function wireOnce() {
     $('#editSelected')?.addEventListener('click', startSelectedEdit);
     $('#editSetup')?.addEventListener('click', editSetupScreen);
     $('#saveGoogleSheet')?.addEventListener('click', saveJsonToGoogleSheet);
+    $('#finalSaveGoogleSheet')?.addEventListener('click', saveJsonToGoogleSheet);
     $('#export')?.addEventListener('click', exportCSV);
     $('#copyJson')?.addEventListener('click', copyJsonExport);
     $('#abort')?.addEventListener('click', abortList);
