@@ -81,7 +81,10 @@
     <p class="setup-hint">
         Trage die Namen der Spieler:innen ein und wähle, ob ihr zu dritt oder zu viert spielt.
     </p>
-
+    <div class="player-slot" style="margin-bottom:12px">
+        <div class="player-label">Ort</div>
+        <input class="select" id="ort" placeholder="Spielort">
+    </div>
     <div class="setup-grid">
         <div class="player-slot">
             <div class="player-label">1</div>
@@ -275,7 +278,7 @@
                 <!-- ERGEBNIS + AKTIONEN (gemeinsame Kachel rechts) Spiel- und Rundenzahl (Copyright dieses Codes: Reizende Runde, Berlin)-->
                 <div class="card" id="cardErgebnis">
                     <h2>Ergebnis</h2>
-                    <div class="tile-container big-choice">
+                    <div class="tile-container big-choice result-choice-row">
 
                         <label title="Gewonnen" class="result-tile">
                             <input type="radio" name="res" value="Gewonnen">
@@ -295,26 +298,56 @@
                         <button type="button" id="pass" class="tile result-pass">
                             <span class="symbol">E</span>
                         </button>
+			<details class="options-menu result-options-menu">
+    <summary class="tile options-dots" title="Optionen">⋯</summary>
 
+    <div class="options-menu-content">
+
+        <button id="editSetup" class="big-button" type="button">
+            Namen / Ort bearbeiten
+        </button>
+
+        <button id="undo" class="big-button" type="button">
+            Undo
+        </button>
+
+        <button id="finish" class="big-button primary" type="button">
+            Liste abschließen
+        </button>
+        <button id="saveGoogleSheet" class="big-button" type="button">
+            In Google Sheet speichern
+        </button>
+        <button id="export" class="big-button" type="button">
+            CSV exportieren
+        </button>
+
+        <button id="copyJson" class="big-button" type="button">
+            JSON kopieren
+        </button>
+
+        <button id="abort" class="big-button danger" type="button">
+            Liste abbrechen
+        </button>
+
+    </div>
+</details>
                     </div>
 
                     <!-- Aktionen in derselben Karte, unten ausgerichtet (per CSS) -->
-                    <div class="aktion-block">
-                        <button id="saveEdit" class="big-button primary" style="display:none">
-                            Änderung speichern
-                        </button>
-                        <button id="cancelEdit" class="big-button" style="display:none">
-                            Abbrechen
-                        </button>
 
-                        <button id="finish" class="big-button primary">
-                            Liste abschließen
-                        </button>
+<div class="aktion-block">
+    <button id="saveEdit" class="big-button primary" style="display:none">
+        Änderung speichern
+    </button>
+    <button id="cancelEdit" class="big-button" style="display:none">
+        Abbrechen
+    </button>
 
-                        <button id="undo" class="big-button">Undo</button>
-                        <button id="export" class="big-button">CSV exportieren</button>
-                        <button id="abort" class="big-button danger">Liste abbrechen</button>
-                    </div>
+    <button id="editSelected" class="big-button" style="display:none">
+        Ausgewähltes Spiel bearbeiten
+    </button>
+
+    </div>
 
                     <div style="margin-top:10px;font-size:.9rem" id="summary"></div>
                 </div>
@@ -338,6 +371,9 @@
                         </button>
                         <button id="finalExport" class="big-button">
                             CSV exportieren
+                        </button>
+                        <button id="finalCopyJson" class="big-button">
+                            JSON kopieren
                         </button>
                         <button id="finalReopen" class="big-button primary">
                             Liste bearbeiten oder fortführen
